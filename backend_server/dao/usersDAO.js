@@ -22,8 +22,8 @@ export default class UsersDAO {
     try {
       cursor = await users.find({ email: email, password: password });
 
-      const details = await cursor.toArray();
-      return { details };
+      //const details = await cursor.toArray();
+      return  await cursor.toArray() 
     } catch (e) {
       console.error(`Unable to issue find command, ${e}`);
       return { details: [] };

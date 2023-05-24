@@ -34,10 +34,11 @@ class _DemoPageViewState extends State<DemoPageView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Center(
         child: Column(
           children: [
-            const SizedBox(height: 100),
+            const SizedBox(height: 80),
             const Text(
               'Check',
               style: TextStyle(
@@ -46,7 +47,7 @@ class _DemoPageViewState extends State<DemoPageView> {
                 color: Palette.textColor,
               ),
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: 10),
             CarouselSlider.builder(
               options: CarouselOptions(
                   height: 400,
@@ -71,8 +72,9 @@ class _DemoPageViewState extends State<DemoPageView> {
               height: 40,
               child: ElevatedButton(
                   onPressed: () {
-                    if (context.mounted){
-                      Navigator.of(context).pushNamedAndRemoveUntil(signUpRoute, (route) => false);
+                    if (context.mounted) {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          signUpRoute, (route) => false);
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -89,24 +91,26 @@ class _DemoPageViewState extends State<DemoPageView> {
   }
 
   Widget buildImage(String image, index) => Padding(
-        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 0),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 300,
-              width: 230,
-              child: Image.asset(
-                image,
-                fit: BoxFit.contain,
+        padding: const EdgeInsets.only(left: 20, right: 20),
+        child: SizedBox(
+          height: 200,
+          child: Column(
+            children: [
+              SizedBox(
+                height: 300,
+                width: 230,
+                child: Image.asset(
+                  image,
+                  fit: BoxFit.contain,
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              textList[index],
-              style: Theme.of(context).textTheme.bodyMedium,
-              textAlign: TextAlign.center,
-            )
-          ],
+              Text(
+                textList[index],
+                style: Theme.of(context).textTheme.bodyMedium,
+                textAlign: TextAlign.center,
+              )
+            ],
+          ),
         ),
       );
 

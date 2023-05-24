@@ -5,8 +5,8 @@ export default class UsersController {
     const email = req.query.email;
     const password = req.query.password;
 
-    const { details } = await UsersDAO.getUser(email, password);
-    let response = { details };
+    const details = await UsersDAO.getUser(email, password);
+    let response =  details ;
 
     res.json(response);
   }

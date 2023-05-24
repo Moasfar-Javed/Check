@@ -1,7 +1,9 @@
 import 'package:check_app/utilities/pallete.dart';
 import 'package:check_app/utilities/routes.dart';
 import 'package:check_app/views/demo_page_view.dart';
+import 'package:check_app/views/sign_in_view.dart';
 import 'package:check_app/views/sign_up_view.dart';
+import 'package:check_app/views/todo_view.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -23,6 +25,8 @@ void main() {
       routes: {
         demoRoute: (context) => const DemoPageView(),
         signUpRoute:(context) => const SignUpView(),
+        signInRoute:(context) => const SignInView(),
+        todoRoute:(context) => const TodoView(),
       },
     ),
   );
@@ -38,6 +42,6 @@ class SplashPageView extends StatefulWidget {
 class _SplashPageViewState extends State<SplashPageView> {
   @override
   Widget build(BuildContext context) {
-    return const DemoPageView();
+    return const SignInView();
   }
 }
