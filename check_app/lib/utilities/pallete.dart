@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 class Palette {
   static const Color textColor = Color(0xFF878787); // lightGray
   static const Color text2Color = Color(0xFFF5F3F7); // veryLightGray
-  
+  static const Color homeTodo = Color(0xFF4D4D4D);
+  static const Color workTodo = Color(0xFF536771);
+  static const Color studyTodo = Color(0xFF715467);
   static const MaterialColor appColorPalette = MaterialColor(
     0xff9a73b5, // 0% comes in here, this will be color picked if no shade is selected when defining a Color property which doesn’t require a swatch.
      <int, Color>{

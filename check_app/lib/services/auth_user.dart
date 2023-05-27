@@ -44,4 +44,8 @@ class AuthUser {
   static void signOut() {
     _instance = null;
   }
+
+  static AuthUser getCurrentUser(){
+    return _instance!;
+  }
 }

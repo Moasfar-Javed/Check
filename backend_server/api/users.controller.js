@@ -6,7 +6,7 @@ export default class UsersController {
     const password = req.query.password;
 
     const details = await UsersDAO.getUser(email, password);
-    let response =  details ;
+    let response = details;
 
     res.json(response);
   }
@@ -17,11 +17,7 @@ export default class UsersController {
       const email = req.body.email;
       const password = req.body.password;
 
-      const userResponse = await UsersDAO.addUser(
-        username,
-        email,
-        password
-      );
+      const userResponse = await UsersDAO.addUser(username, email, password);
       res.json({ Status: "Success" });
     } catch (e) {
       res.status(500).json({ Error: e.message });

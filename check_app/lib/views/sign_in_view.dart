@@ -131,7 +131,7 @@ class _SignInViewState extends State<SignInView> {
                     final password = _password.text;
 
                     var response = await BaseClient()
-                        .getUser('/users?email=$email&password=$password')
+                        .getUserApi('/users?email=$email&password=$password')
                         .catchError((e) {});
                     if (response != null) {
                       List<dynamic> jsonResponse = jsonDecode(response);
@@ -142,8 +142,7 @@ class _SignInViewState extends State<SignInView> {
                         //AuthUser.signOut();
                         if (context.mounted) {
                           Navigator.of(context).pushNamedAndRemoveUntil(
-                              todoRoute, (route) => false);
-                             
+                              homeRoute, (route) => false);
                         }
                       }
                     } else {

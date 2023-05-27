@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../services/base_client.dart';
-import '../services/user.dart';
+import '../services/user_model.dart';
 import '../utilities/pallete.dart';
 import '../utilities/routes.dart';
 
@@ -139,7 +139,7 @@ class _SignUpViewState extends State<SignUpView> {
                       password: password,
                     );
                     var response = await BaseClient()
-                        .postUser('/users', user)
+                        .postUserApi('/users', user)
                         .catchError((e) {});
                     if (response == null) return;
                     print('user created');
