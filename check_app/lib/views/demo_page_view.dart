@@ -1,9 +1,13 @@
+import "dart:io" show Platform;
+
 import "package:carousel_slider/carousel_slider.dart";
 import "package:flutter/material.dart";
+import "package:gif/gif.dart";
 import "package:smooth_page_indicator/smooth_page_indicator.dart";
 
 import '../utilities/pallete.dart';
 import "../utilities/routes.dart";
+import "../widgets/gradient_button.dart";
 
 class DemoPageView extends StatefulWidget {
   const DemoPageView({super.key});
@@ -12,7 +16,9 @@ class DemoPageView extends StatefulWidget {
   State<DemoPageView> createState() => _DemoPageViewState();
 }
 
-class _DemoPageViewState extends State<DemoPageView> {
+class _DemoPageViewState extends State<DemoPageView>
+    with TickerProviderStateMixin {
+  late final GifController ctrlr1, ctrlr2, ctrlr3, ctrlr4, ctrlr5, ctrlr6;
   int carouselActiveIndex = 0;
   final textList = [
     'Check is an all-in-one notebook app that helps you manage your tasks more efficiently and lead a more productive lifestyle',
@@ -24,13 +30,27 @@ class _DemoPageViewState extends State<DemoPageView> {
   ];
 
   final imageList = [
-    'assets/images/cover.png',
-    'assets/images/notes.png',
-    'assets/images/todo.png',
-    'assets/images/events.png',
-    'assets/images/time.png',
-    'assets/images/multiple_devices.png'
+    'assets/images/cover.gif',
+    'assets/images/notes.gif',
+    'assets/images/todo.gif',
+    'assets/images/events.gif',
+    'assets/images/time.gif',
+    'assets/images/multiple_devices.gif'
   ];
+
+  @override
+  void initState() {
+    ctrlr1 = GifController(vsync: this);
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    ctrlr1.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,13 +58,12 @@ class _DemoPageViewState extends State<DemoPageView> {
       body: Center(
         child: Column(
           children: [
-            const SizedBox(height: 80),
+            SizedBox(height: (Platform.isIOS || Platform.isAndroid) ? 80 : 30),
             const Text(
               'Check',
               style: TextStyle(
                 fontSize: 40,
                 fontWeight: FontWeight.w800,
-                color: Palette.textColor,
               ),
             ),
             const SizedBox(height: 10),
@@ -67,23 +86,14 @@ class _DemoPageViewState extends State<DemoPageView> {
             ),
             buildIndicator(),
             const SizedBox(height: 50),
-            SizedBox(
-              width: 180,
-              height: 40,
-              child: ElevatedButton(
-                  onPressed: () {
-                    if (context.mounted) {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          signUpRoute, (route) => false);
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                  ),
-                  child: const Text('Get Started')),
-            )
+            GradientButton(
+                onPressed: () {
+                  if (context.mounted) {
+                    Navigator.of(context)
+                        .pushNamedAndRemoveUntil(signUpRoute, (route) => false);
+                  }
+                },
+                child: const Text('Get Started')),
           ],
         ),
       ),
@@ -97,13 +107,21 @@ class _DemoPageViewState extends State<DemoPageView> {
           child: Column(
             children: [
               SizedBox(
-                height: 300,
-                width: 230,
-                child: Image.asset(
-                  image,
-                  fit: BoxFit.contain,
-                ),
-              ),
+                  height: 300,
+                  
+                  child: Gif(
+                    controller: ctrlr1,
+                    //duration: const Duration(seconds: 4),
+                    autostart: Autostart.once,
+                    placeholder: (context) =>
+                        const Center(child: CircularProgressIndicator()),
+                    image: AssetImage(image),
+                  )
+                  // Image.asset(
+                  //   image,
+                  //   fit: BoxFit.contain,
+                  // ),
+                  ),
               Text(
                 textList[index],
                 style: Theme.of(context).textTheme.bodyMedium,
@@ -117,8 +135,8 @@ class _DemoPageViewState extends State<DemoPageView> {
   Widget buildIndicator() => AnimatedSmoothIndicator(
         activeIndex: carouselActiveIndex,
         count: imageList.length,
-        effect: ExpandingDotsEffect(
-          activeDotColor: Palette.appColorPalette[200]!,
+        effect: const ExpandingDotsEffect(
+          activeDotColor: Palette.accentColorVariant,
           dotWidth: 7,
           dotHeight: 7,
           spacing: 2,

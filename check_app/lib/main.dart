@@ -8,20 +8,22 @@ import 'package:flutter/material.dart';
 
 
 void main() {
+  //Firebase.initializeApp();
   runApp(
     MaterialApp(
-      theme: ThemeData(
-          primarySwatch: Palette.appColorPalette,
-          scaffoldBackgroundColor: Palette.appColorPalette[900],
-          fontFamily: 'Inter',
-          textTheme: const TextTheme(
-            bodyMedium: TextStyle(
-              color: Palette.textColor,
-            ),
-            bodySmall: TextStyle(
-              color: Palette.text2Color,
-            ),
-          )),
+      theme: Palette.appTheme,
+      // ThemeData(
+      //     primarySwatch: Palette.appColorPalette,
+      //     scaffoldBackgroundColor: Palette.appColorPalette[900],
+      //     fontFamily: 'Inter',
+      //     textTheme: const TextTheme(
+      //       bodyMedium: TextStyle(
+      //         color: Palette.textColor,
+      //       ),
+      //       bodySmall: TextStyle(
+      //         color: Palette.text2Color,
+      //       ),
+      //     )),
       home: const Guider(),
       routes: {
         demoRoute: (context) => const DemoPageView(),
@@ -44,6 +46,6 @@ class Guider extends StatefulWidget {
 class _GuiderState extends State<Guider> {
   @override
   Widget build(BuildContext context) {
-    return const SignInView();
+    return const DemoPageView();
   }
 }

@@ -40,7 +40,11 @@ export default class TodosDAO {
         completed_on: null,
         tag: tag,
       };
-      return await todos.insertOne(todoDoc);
+      const result = await todos.insertOne(todoDoc);
+      const insertedId = result.insertedId;
+      const addedDocument = await todos.findOne({ _id: insertedId });
+
+      return addedDocument;
     } catch (e) {
       console.error(`Unable to add todo: ${e}`);
       return { Error: e };

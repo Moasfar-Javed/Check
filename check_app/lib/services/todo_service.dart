@@ -8,8 +8,6 @@ import 'base_client.dart';
 import 'defined_exceptions.dart';
 
 class TodoService {
-  AuthUser user = AuthUser.getCurrentUser();
-
   List<Todo> _todoList = [];
   //creating a stream and a streamcontroller
   static final TodoService _shared = TodoService._sharedInstance();
@@ -17,14 +15,8 @@ class TodoService {
 
   TodoService._sharedInstance() {
     _todoStreamController = StreamController<List<Todo>>.broadcast(
-      onListen: () async {
-        try {
-          _todoList = await getTodoApi(id: user.id);
-          _todoStreamController.sink.add(_todoList);
-        } catch (error) {
-          // Handle error
-          print('Error: $error');
-        }
+      onListen: () {
+        _todoStreamController.sink.add(_todoList);
       },
     );
   }
@@ -35,7 +27,14 @@ class TodoService {
 
   // functionalities
 
-  Future<List<Todo>> getTodoApi({required id}) async {
+  Future<void> cacheTodos() async {
+    final allTodos = getTodos(id: AuthUser.getCurrentUser().id);
+    _todoList = await allTodos;
+    //_todoList.sort();
+    _todoStreamController.sink.add(_todoList);
+  }
+
+  Future<List<Todo>> getTodos({required id}) async {
     final response =
         await BaseClient().getTodosApi('/todos?id=$id').catchError((e) {});
     if (response == null) throw ApiException;
@@ -51,24 +50,72 @@ class TodoService {
     return list;
   }
 
-  Future<void> postTodoApi({
+  Future<void> addTodo({
     required String description,
     required DateTime due,
     required String tag,
   }) async {
     final DateTime createdOn = DateTime.now();
-    final Todo todo = Todo(
-      userId: user.id,
-      description: description,
-      created: createdOn,
-      due: due,
-      tag: tag,
-    );
-    var response =
-        await BaseClient().postTodoApi('/todos?id=${user.id}', todo).catchError((e) {});
-    if (response == null) return;
+    final Map<String, dynamic> requestBody = {
+      "description": description,
+      "created": createdOn.toUtc().toString(),
+      "due": due.toUtc().toString(),
+      "tag": tag,
+    };
 
-    _todoList.add(todo);
+    var response = await BaseClient()
+        .postTodoApi(
+          '/todos?id=${AuthUser.getCurrentUser().id}',
+          requestBody,
+        )
+        .catchError((e) {});
+    if (response == null) return;
+    final jsonResponse = jsonDecode(response);
+    Todo todoReponse = Todo.fromJson(jsonResponse);
+    _todoList.add(todoReponse);
     _todoStreamController.add(_todoList);
+  }
+
+  Future<void> updateTodo({required String id}) async {
+    final DateTime completed = DateTime.now();
+    final Map<String, dynamic> requestBody = {
+      'completed_on': completed.toString(),
+    };
+
+    try {
+      var response =
+          await BaseClient().putTodoApi('/todos?id=$id', requestBody);
+
+      Todo? todoToUpdate;
+
+      try {
+        todoToUpdate = _todoList.firstWhere((todo) => todo.id == id);
+      } catch (e) {
+        // TODO: Handle if Todo is not found
+      }
+
+      if (todoToUpdate != null) {
+        todoToUpdate.completedOn = completed;
+        todoToUpdate.status = 'done';
+      }
+
+      _todoStreamController.add(_todoList);
+    } catch (e) {
+      // TODO: Handle the error case
+      print('Error updating Todo: $e');
+    }
+  }
+
+  Future<void> deleteTodo({required id}) async {
+    final response =
+        await BaseClient().deleteTodoApi('/todos?id=$id').catchError((e) {});
+    if (response == null) throw ApiException;
+    final jsonResponse = jsonDecode(response);
+    try {
+      _todoList.removeWhere((todo) => todo.id == id);
+      _todoStreamController.add(_todoList);
+    } catch (e) {
+      //TODO: throw exception
+    }
   }
 }

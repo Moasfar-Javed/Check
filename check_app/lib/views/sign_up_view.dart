@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../services/base_client.dart';
 import '../services/user_model.dart';
-import '../utilities/pallete.dart';
 import '../utilities/routes.dart';
+import '../widgets/gradient_button.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
@@ -51,7 +51,6 @@ class _SignUpViewState extends State<SignUpView> {
                 style: TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.w800,
-                  color: Palette.textColor,
                 ),
               ),
               const SizedBox(height: 50),
@@ -63,15 +62,9 @@ class _SignUpViewState extends State<SignUpView> {
                       controller: _username,
                       autocorrect: false,
                       enableSuggestions: false,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Username',
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            width: 2,
-                            color: Palette.appColorPalette[400]!,
-                          ),
-                        ),
-                      ),
+                      ),  
                     ),
                     const SizedBox(height: 10),
                     TextField(
@@ -79,14 +72,9 @@ class _SignUpViewState extends State<SignUpView> {
                       keyboardType: TextInputType.emailAddress,
                       autocorrect: false,
                       enableSuggestions: false,
-                      decoration: InputDecoration(
+                      decoration: const  InputDecoration(
                         hintText: 'Email',
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            width: 2,
-                            color: Palette.appColorPalette[400]!,
-                          ),
-                        ),
+                        
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -95,14 +83,8 @@ class _SignUpViewState extends State<SignUpView> {
                       obscureText: true,
                       autocorrect: false,
                       enableSuggestions: false,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Password',
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            width: 2,
-                            color: Palette.appColorPalette[400]!,
-                          ),
-                        ),
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -111,24 +93,16 @@ class _SignUpViewState extends State<SignUpView> {
                       obscureText: true,
                       autocorrect: false,
                       enableSuggestions: false,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Confirm Password',
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            width: 2,
-                            color: Palette.appColorPalette[400]!,
-                          ),
-                        ),
+                        
                       ),
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 100),
-              SizedBox(
-                width: 180,
-                height: 40,
-                child: ElevatedButton(
+              GradientButton(
                   onPressed: () async {
                     final username = _username.text;
                     final email = _email.text;
@@ -144,14 +118,9 @@ class _SignUpViewState extends State<SignUpView> {
                     if (response == null) return;
                     print('user created');
                   },
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                  ),
+
                   child: const Text('Sign Up'),
                 ),
-              ),
               const SizedBox(height: 25),
               const Text('Already have an account?'),
               const SizedBox(height: 10),

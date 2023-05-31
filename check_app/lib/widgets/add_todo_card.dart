@@ -90,7 +90,7 @@ class _AddTodoCardState extends State<AddTodoCard> {
     }
   }
 
-  String getFormatedTime(Time time){
+  String getFormatedTime(Time time) {
     String formattedTime = '';
     int hour = time.hourOfPeriod;
     String hourString = (hour == 0 ? '12' : hour.toString());
@@ -103,9 +103,8 @@ class _AddTodoCardState extends State<AddTodoCard> {
   void _addTodo() {
     DateTime due = DateTime(_dateValue!.year, _dateValue!.month,
         _dateValue!.day, _timePickerValue.hour, _timePickerValue.minute);
-    
-    _todoService.postTodoApi(
-        description: _todo.text, due: due, tag: selectedTag!);
+
+    _todoService.addTodo(description: _todo.text, due: due, tag: selectedTag!);
     //print('${selectedTag} ${_todo.text} ${due} ${DateTime.now()}');
   }
 

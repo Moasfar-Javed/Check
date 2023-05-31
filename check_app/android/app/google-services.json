@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "623152174735",
+    "project_id": "dijinx-check-applicaton",
+    "storage_bucket": "dijinx-check-applicaton.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:623152174735:android:52aa0fbeb527c8265f82fa",
+        "android_client_info": {
+          "package_name": "com.dijinx.check_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpCz1yIeWz-pVhLBhYP8WS_i0ade_DyiU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

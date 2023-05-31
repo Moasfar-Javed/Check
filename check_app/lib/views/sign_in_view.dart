@@ -1,11 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:gif/gif.dart';
 
 import '../services/auth_user.dart';
 import '../services/base_client.dart';
-import '../utilities/pallete.dart';
 import '../utilities/routes.dart';
+import '../widgets/gradient_button.dart';
 
 class SignInView extends StatefulWidget {
   const SignInView({super.key});
@@ -14,7 +15,8 @@ class SignInView extends StatefulWidget {
   State<SignInView> createState() => _SignInViewState();
 }
 
-class _SignInViewState extends State<SignInView> {
+class _SignInViewState extends State<SignInView> with TickerProviderStateMixin{
+  late final GifController ctrlr;
   late final TextEditingController _email;
   late final TextEditingController _password;
 
@@ -25,6 +27,7 @@ class _SignInViewState extends State<SignInView> {
 
   @override
   void initState() {
+    ctrlr = GifController(vsync: this);
     _email = TextEditingController();
     _password = TextEditingController();
     _focusNode1 = FocusNode();
@@ -56,14 +59,18 @@ class _SignInViewState extends State<SignInView> {
                 style: TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.w800,
-                  color: Palette.textColor,
                 ),
               ),
-              Image.asset(
-                'assets/images/login.png',
-                height: 200,
-                width: 200,
-              ),
+                 Gif(
+                  controller: ctrlr,
+                  width: 200,
+                  height: 200,
+                  //duration: const Duration(seconds: 4),
+                  autostart: Autostart.once,
+                  placeholder: (context) =>
+                        const Center(child: CircularProgressIndicator()),
+                  image: const AssetImage('assets/images/login.gif'),
+                ),
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: FocusTraversalGroup(
@@ -80,14 +87,9 @@ class _SignInViewState extends State<SignInView> {
                           _focusNode1.unfocus();
                           FocusScope.of(context).requestFocus(_focusNode2);
                         },
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: 'Email',
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              width: 2,
-                              color: Palette.appColorPalette[400]!,
-                            ),
-                          ),
+                          
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -109,12 +111,7 @@ class _SignInViewState extends State<SignInView> {
                               });
                             },
                           ),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              width: 2,
-                              color: Palette.appColorPalette[400]!,
-                            ),
-                          ),
+                          
                         ),
                       ),
                     ],
@@ -122,41 +119,33 @@ class _SignInViewState extends State<SignInView> {
                 ),
               ),
               const SizedBox(height: 40),
-              SizedBox(
-                width: 180,
-                height: 40,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    final email = _email.text;
-                    final password = _password.text;
+              GradientButton(
+                onPressed: () async {
+                  final email = _email.text;
+                  final password = _password.text;
 
-                    var response = await BaseClient()
-                        .getUserApi('/users?email=$email&password=$password')
-                        .catchError((e) {});
-                    if (response != null) {
-                      List<dynamic> jsonResponse = jsonDecode(response);
+                  var response = await BaseClient()
+                      .getUserApi('/users?email=$email&password=$password')
+                      .catchError((e) {});
+                  if (response != null) {
+                    List<dynamic> jsonResponse = jsonDecode(response);
 
-                      if (jsonResponse.isNotEmpty) {
-                        AuthUser user = AuthUser.fromJson(jsonResponse[0]);
-                        print(user.email);
-                        //AuthUser.signOut();
-                        if (context.mounted) {
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              homeRoute, (route) => false);
-                        }
+                    if (jsonResponse.isNotEmpty) {
+                      AuthUser user = AuthUser.fromJson(jsonResponse[0]);
+                      print(user.email);
+                      //AuthUser.signOut();
+                      if (context.mounted) {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            homeRoute, (route) => false);
                       }
-                    } else {
-                      return;
                     }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                  ),
-                  child: const Text('Sign In'),
-                ),
+                  } else {
+                    return;
+                  }
+                },
+                 child: const Text('Sign In'),
               ),
+               
               const SizedBox(height: 25),
               const Text("Don't have an account?"),
               const SizedBox(height: 10),

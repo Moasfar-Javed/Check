@@ -25,7 +25,7 @@ export default class TodosController {
         due,
         tag
       );
-      res.json({ Status: "Success" });
+      res.json(todoResponse);
     } catch (e) {
       res.status(500).json({ Error: e.message });
     }
