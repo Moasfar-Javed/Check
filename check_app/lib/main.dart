@@ -46,6 +46,6 @@ class Guider extends StatefulWidget {
 class _GuiderState extends State<Guider> {
   @override
   Widget build(BuildContext context) {
-    return const DemoPageView();
+    return const SignInView();
   }
 }

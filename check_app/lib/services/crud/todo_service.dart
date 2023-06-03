@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:check_app/services/auth_user.dart';
-import 'package:check_app/services/todo_model.dart';
+import 'package:check_app/services/models/todo_model.dart';
 
-import 'base_client.dart';
-import 'defined_exceptions.dart';
+import '../base_client.dart';
+import '../defined_exceptions.dart';
 
 class TodoService {
   List<Todo> _todoList = [];
@@ -39,7 +39,7 @@ class TodoService {
         await BaseClient().getTodosApi('/todos?id=$id').catchError((e) {});
     if (response == null) throw ApiException;
     final jsonResponse = jsonDecode(response);
-    if (jsonResponse.isEmpty) NoTodosException;
+    if (jsonResponse.isEmpty) NoItemsException;
 
     //deserializing json to List<Todo>
     List<Todo> list = [];

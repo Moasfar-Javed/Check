@@ -1,7 +1,7 @@
-import 'package:check_app/services/todo_service.dart';
+import 'package:check_app/services/crud/todo_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../services/todo_model.dart';
+import '../services/models/todo_model.dart';
 import '../utilities/pallete.dart';
 
 class Dialogs {

@@ -41,6 +41,8 @@ class AuthUser {
     }
   }
 
+  
+
   static void signOut() {
     _instance = null;
     

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-const String baseUrl = 'http://192.168.100.8:5000/api';
+const String baseUrl = 'http://192.168.100.9:5000/api';
 
 class BaseClient {
   var client = http.Client();
@@ -98,6 +98,57 @@ class BaseClient {
   }
 
   Future<dynamic> deleteTodoApi(String api) async {
+    var uri = Uri.parse(baseUrl + api);
+    var response = await client.delete(uri);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return response.body;
+    } else {
+      //TODO throw exception
+    }
+  }
+
+
+    //note data
+  Future<dynamic> getNoteApi(String api) async {
+    var uri = Uri.parse(baseUrl + api);
+    var response = await client.get(uri);
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      //TODO throw exception
+    }
+  }
+
+  Future<dynamic> postNoteApi(String api, dynamic object) async {
+    var uri = Uri.parse(baseUrl + api);
+    var payload = json.encode(object);
+    var headers = {
+      'Content-Type': 'application/json',
+    };
+    var response = await client.post(uri, body: payload, headers: headers);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return response.body;
+    } else {
+      //TODO throw exception
+    }
+  }
+
+  Future<dynamic> putNoteApi(String api, dynamic object) async {
+    var uri = Uri.parse(baseUrl + api);
+    var payload = json.encode(object);
+    var headers = {
+      'Content-Type': 'application/json',
+    };
+    var response = await client.put(uri, body: payload, headers: headers);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return json.decode(response.body); // Parse the JSON response
+    } else {
+      throw Exception(
+          'Failed to update Todo. Status code: ${response.statusCode}');
+    }
+  }
+
+  Future<dynamic> deleteNoteApi(String api) async {
     var uri = Uri.parse(baseUrl + api);
     var response = await client.delete(uri);
     if (response.statusCode == 200 || response.statusCode == 201) {

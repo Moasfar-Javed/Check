@@ -1,9 +1,10 @@
 import 'dart:io';
 
-import 'package:check_app/services/todo_service.dart';
+import 'package:check_app/services/crud/todo_service.dart';
 import 'package:day_night_time_picker/day_night_time_picker.dart';
 import 'package:flutter/material.dart';
 import '../utilities/pallete.dart';
+import 'gradient_button.dart';
 
 class AddTodoCard extends StatefulWidget {
   const AddTodoCard({
@@ -119,6 +120,7 @@ class _AddTodoCardState extends State<AddTodoCard> {
         child: GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: Card(
+            color: Palette.backgroundColor,
             margin: const EdgeInsets.only(bottom: 0),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
@@ -131,7 +133,6 @@ class _AddTodoCardState extends State<AddTodoCard> {
                   IconButton(
                     onPressed: () => Navigator.of(context).pop(),
                     icon: const Icon(Icons.keyboard_arrow_down),
-                    color: Palette.textColor,
                   ),
                   Column(
                     children: [
@@ -140,44 +141,57 @@ class _AddTodoCardState extends State<AddTodoCard> {
                         child: Row(
                           children: [
                             //SizedBox(child: Icon(Icons.),),
-                            SizedBox(
+                            Container(
                               width: 100,
-                              child: DropdownButton<String>(
-                                value: selectedTag,
-                                icon: const Icon(Icons.arrow_drop_down),
-                                isExpanded: true,
-                                underline: Container(
-                                  height: 2,
-                                  color: Palette.appColorPalette[400],
+                              height: 60,
+                              // padding: const EdgeInsets.symmetric(5
+                              //     horizontal: 10, vertical: 5),
+                              decoration: BoxDecoration(
+                                color: Palette.backgroundColorVariant,
+                                borderRadius: BorderRadius.circular(8),
+                                //border: Border.all(color: Pal)
+                              ),
+                              child: InputDecorator(
+                                decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        color: Palette.backgroundColorShade),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        color: Palette.accentColor),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
                                 ),
-                                hint: const Text('Tag'),
-                                items: _tagsList
-                                    .map((item) => DropdownMenuItem<String>(
-                                        value: item, child: Text(item)))
-                                    .toList(),
-                                onChanged: (item) {
-                                  setState(() {
-                                    selectedTag = item;
-                                  });
-                                },
+                                child: DropdownButton<String>(
+                                  value: selectedTag,
+                                  icon: const Icon(Icons.arrow_drop_down),
+                                  isExpanded: true,
+                                  underline: Container(),
+                                  hint: const Text('Tag', style: TextStyle(color: Palette.textColorVariant),),
+                                  items: _tagsList
+                                      .map((item) => DropdownMenuItem<String>(
+                                          value: item, child: Text(item)))
+                                      .toList(),
+                                  onChanged: (item) {
+                                    setState(() {
+                                      selectedTag = item;
+                                    });
+                                  },
+                                ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 30),
                       TextField(
                         controller: _todo,
                         maxLength: 50,
                         maxLines: null,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: 'To-do',
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              width: 2,
-                              color: Palette.appColorPalette[400]!,
-                            ),
-                          ),
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -191,14 +205,8 @@ class _AddTodoCardState extends State<AddTodoCard> {
                                   controller: _date,
                                   autocorrect: false,
                                   enableSuggestions: false,
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                     hintText: 'Due Date',
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                        width: 2,
-                                        color: Palette.appColorPalette[400]!,
-                                      ),
-                                    ),
                                   ),
                                 ),
                               ),
@@ -235,14 +243,8 @@ class _AddTodoCardState extends State<AddTodoCard> {
                                   controller: _time,
                                   autocorrect: false,
                                   enableSuggestions: false,
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                     hintText: 'Due Time',
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                        width: 2,
-                                        color: Palette.appColorPalette[400]!,
-                                      ),
-                                    ),
                                   ),
                                 ),
                               ),
@@ -255,16 +257,11 @@ class _AddTodoCardState extends State<AddTodoCard> {
                   const SizedBox(height: 30),
                   SizedBox(
                     width: 200,
-                    child: ElevatedButton(
+                    child: GradientButton(
                       onPressed: () {
                         _addTodo();
                         Navigator.of(context).pop();
                       },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                      ),
                       child: const Text('Add'),
                     ),
                   ),

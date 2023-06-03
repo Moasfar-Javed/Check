@@ -1,19 +1,20 @@
 import express from "express";
-import UsersCtrl from "./users.controller.js";
+import UsersController from "./users.controller.js";
 import TodosController from "./todos.controller.js";
+import NotesController from "./notes.controller.js";
 
 const router = express.Router();
 
 router
   .route("/users")
   //http://<host_ip>:5000/api/users?email=<xyz>&password=<xyz>
-  .get(UsersCtrl.apiGetUser)
+  .get(UsersController.apiGetUser)
   //http://<host_ip>:5000/api/users username, email, password in the body
-  .post(UsersCtrl.apiPostUser)
+  .post(UsersController.apiPostUser)
   //http://<host_ip>:5000/api/users?id=<xyz> username, email, password in the body
-  .put(UsersCtrl.apiPutUser)
+  .put(UsersController.apiPutUser)
   //http://<host_ip>:api/users?id=<xyz>
-  .delete(UsersCtrl.apiDeleteUser);
+  .delete(UsersController.apiDeleteUser);
 
 router
   .route("/todos")
@@ -28,5 +29,18 @@ router
   //http://<host_ip>:5000/api/todos?id=<xyz> (id is the todo id)
   .delete(TodosController.apiDeleteTodo);
   
+router
+  .route("/notes")
+  //http://<host_ip>:5000/api/notess?user=<xyz> (user is the user's email)
+  .get(NotesController.apiGetNotes)
+  //http://<host_ip>:5000/api/notes?user=<xyz> (user is the user's email)
+  //title, note, isHidden, isFavourite, created_on, accessed_on in the body
+  .post(NotesController.apiPostNote)
+  //http://<host_ip>:5000/api/notes?id=<xyz> (id is the note id)
+  //title, note, isHidden, isFavourite, accessed_on in the body
+  .put(NotesController.apiPutNote)
+  //http://<host_ip>:5000/api/notes?id=<xyz> (id is the note id)
+  .delete(NotesController.apiDeleteNote);
+
 
 export default router;

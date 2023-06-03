@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../services/base_client.dart';
-import '../services/user_model.dart';
+import '../services/models/user_model.dart';
 import '../utilities/routes.dart';
 import '../widgets/gradient_button.dart';
 

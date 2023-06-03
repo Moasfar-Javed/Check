@@ -1,3 +1,3 @@
-class NoTodosException implements Exception{}
+class NoItemsException implements Exception {}
 
-class ApiException implements Exception{}
+class ApiException implements Exception {}

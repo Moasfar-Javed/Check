@@ -78,7 +78,7 @@ class Palette {
       fillColor: backgroundColorVariant,
       hintStyle: const TextStyle(color: textColorVariant),
       enabledBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: accentColor),
+        borderSide: const BorderSide(color: backgroundColorShade),
         borderRadius: BorderRadius.circular(8),
       ),
       focusedBorder: OutlineInputBorder(

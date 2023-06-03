@@ -9,7 +9,6 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import '../services/auth_user.dart';
 import '../utilities/pallete.dart';
 import '../utilities/routes.dart';
-import '../widgets/dialogs.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -54,7 +53,6 @@ class _HomViewState extends State<HomeView> {
             style: const TextStyle(
               fontSize: 40,
               fontWeight: FontWeight.w800,
-              color: Palette.textColor,
             ),
           ),
         ),
@@ -99,7 +97,7 @@ class _HomViewState extends State<HomeView> {
                   ),
                 ],
                 child: CircleAvatar(
-                  backgroundColor: Palette.appColorPalette,
+                  backgroundColor: Palette.primaryColor,
                   child: Text(
                     avatarLetter,
                     style: const TextStyle(
@@ -121,16 +119,16 @@ class _HomViewState extends State<HomeView> {
             top:
                 BorderSide(width: 1, color: Palette.textColor.withOpacity(0.2)),
           ),
-          color: Palette.appColorPalette[900]!,
+          color: Palette.backgroundColorShade,
         ),
         child: Padding(
           padding:
               const EdgeInsets.only(top: 5, bottom: 10, left: 10, right: 10),
           child: GNav(
-            backgroundColor: Palette.appColorPalette[900]!,
+            backgroundColor: Colors.transparent,
             color: Palette.textColor,
             activeColor: Colors.white,
-            tabBackgroundColor: Palette.appColorPalette.withOpacity(0.6),
+            tabBackgroundColor: Palette.primaryColor,
             gap: 0,
             iconSize: 22,
             tabBorderRadius: 20,

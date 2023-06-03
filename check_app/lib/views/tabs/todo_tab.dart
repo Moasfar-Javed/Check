@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:check_app/services/auth_user.dart';
-import 'package:check_app/services/todo_service.dart';
+import 'package:check_app/services/crud/todo_service.dart';
 import 'package:check_app/utilities/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:intl/intl.dart';
-import '../../services/todo_model.dart';
+import '../../services/models/todo_model.dart';
 import '../../widgets/add_todo_card.dart';
 import '../../widgets/dialogs.dart';
 
@@ -20,9 +20,7 @@ class TodoTab extends StatefulWidget {
 class _TodoTabState extends State<TodoTab> {
   String dropdownValue = 'All';
   late final TodoService _todoService;
-
   final AuthUser user = AuthUser.getCurrentUser();
-
   final Dialogs dialog = Dialogs();
   @override
   void initState() {
@@ -104,14 +102,19 @@ class _TodoTabState extends State<TodoTab> {
         }
       case 'Pending':
         {
-          todos = todosList.where((todo) => todo.status == 'pending' && !todo.due.isBefore(DateTime.now())).toList();
+          todos = todosList
+              .where((todo) =>
+                  todo.status == 'pending' &&
+                  !todo.due.isBefore(DateTime.now()))
+              .toList();
           Todo.sortByDueClosestToNow(todos);
           break;
         }
       case 'Missed':
         {
           todos = todosList
-              .where((todo) => todo.due.isBefore(DateTime.now()) && todo.status == 'pending')
+              .where((todo) =>
+                  todo.due.isBefore(DateTime.now()) && todo.status == 'pending')
               .toList();
           break;
         }
@@ -133,7 +136,7 @@ class _TodoTabState extends State<TodoTab> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Palette.appColorPalette,
+        backgroundColor: Palette.primaryColorVariant,
         onPressed: () {
           showAnimatedDialog(
             context: context,
@@ -144,9 +147,9 @@ class _TodoTabState extends State<TodoTab> {
             },
           );
         },
-        child: Icon(
+        child: const Icon(
           Icons.add,
-          color: Palette.appColorPalette[800]!,
+          
         ),
       ),
       body: Column(
@@ -200,12 +203,12 @@ class _TodoTabState extends State<TodoTab> {
 
                                   if (allTodos.isEmpty) {
                                     return const Text(
-                                        'You dont have any todos');
+                                        '\nYou dont have any todos');
                                   } else {
                                     var todosList = _createTodoList(allTodos);
-                                    if (todosList.isEmpty){
+                                    if (todosList.isEmpty) {
                                       return const Text(
-                                          'You dont have any todos');
+                                          '\nYou dont have any todos');
                                     }
                                     return ListView.builder(
                                       padding: const EdgeInsets.only(
@@ -230,10 +233,11 @@ class _TodoTabState extends State<TodoTab> {
                                           ),
                                           child: ClipPath(
                                             clipper: ShapeBorderClipper(
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12))),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                              ),
+                                            ),
                                             child: ListTile(
                                               onTap: () {
                                                 dialog.showTodoDetailsDialog(
@@ -249,11 +253,7 @@ class _TodoTabState extends State<TodoTab> {
                                                   Text(
                                                     DateFormat('hh:mm a')
                                                         .format(todo.due),
-                                                    style: TextStyle(
-                                                        fontSize: 10,
-                                                        color: Palette
-                                                                .appColorPalette[
-                                                            800]!),
+                                                    
                                                   ),
                                                   SizedBox(
                                                     height: (!Platform.isIOS ||
@@ -269,8 +269,6 @@ class _TodoTabState extends State<TodoTab> {
                                                 softWrap: true,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
-                                                    color: Palette
-                                                        .appColorPalette[800]!,
                                                     decoration: (todo.status ==
                                                             "pending")
                                                         ? null

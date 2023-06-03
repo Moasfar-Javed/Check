@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../services/todo_model.dart';
+import '../services/models/todo_model.dart';
 
 class TodoInfoDialog extends StatelessWidget {
   final Todo todo;
