@@ -1,4 +1,6 @@
+import 'package:check_app/widgets/add_edit_note_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 
 import '../services/models/note_model.dart';
 import '../utilities/pallete.dart';
@@ -36,8 +38,17 @@ class _VerticalNotesListState extends State<VerticalNotesList> {
       itemBuilder: (context, index) {
         Note note = notes[index];
         return ListTile(
-          onTap: () {},
-          contentPadding: EdgeInsets.symmetric(horizontal: 8),
+          onTap: () {
+          showAnimatedDialog(
+              context: context,
+              animationType: DialogTransitionType.slideFromBottom,
+              barrierDismissible: true,
+              builder: (BuildContext context) {
+                return  AddEditNoteCard(note: note);
+              },
+            );
+          },
+          contentPadding: const EdgeInsets.symmetric(horizontal: 8),
           //dense: true,
           title: Text(
             note.title,

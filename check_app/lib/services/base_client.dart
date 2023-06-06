@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-const String baseUrl = 'http://192.168.100.9:5000/api';
+const String baseUrl = 'http://192.168.100.10:5000/api';
 
 class BaseClient {
   var client = http.Client();
@@ -107,8 +107,7 @@ class BaseClient {
     }
   }
 
-
-    //note data
+  //note data
   Future<dynamic> getNoteApi(String api) async {
     var uri = Uri.parse(baseUrl + api);
     var response = await client.get(uri);

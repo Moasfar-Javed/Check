@@ -4,6 +4,7 @@ import 'package:check_app/views/home_view.dart';
 import 'package:check_app/views/demo_page_view.dart';
 import 'package:check_app/views/sign_in_view.dart';
 import 'package:check_app/views/sign_up_view.dart';
+import 'package:check_app/widgets/crud_note_view.dart';
 import 'package:flutter/material.dart';
 
 
@@ -30,7 +31,7 @@ void main() {
         signUpRoute:(context) => const SignUpView(),
         signInRoute:(context) => const SignInView(),
         homeRoute:(context) => const HomeView(),
-        
+        crudNotesRoute:(context) => const CrudNoteView(), 
       },
     ),
   );

@@ -82,23 +82,24 @@ class Dialogs {
                 Padding(
                   padding: const EdgeInsets.only(left: 180),
                   child: IconButton(
-                      onPressed: () async {
-                        bool choice = await showConfirmationDialog(
-                          context: context,
-                          type: 'delete',
-                          button: 'Delete',
-                          text: 'Are you sure you want to delete this item?',
-                        );
-                        //print(choice);
-                        if (choice) {
-                          _todoService.deleteTodo(id: todo.id);
-                          if (context.mounted) Navigator.of(context).pop();
-                        }
-                      },
-                      icon: const Icon(
-                        Icons.delete,
-                        color: Colors.red,
-                      )),
+                    onPressed: () async {
+                      bool choice = await showConfirmationDialog(
+                        context: context,
+                        type: 'delete',
+                        button: 'Delete',
+                        text: 'Are you sure you want to delete this item?',
+                      );
+                      //print(choice);
+                      if (choice) {
+                        _todoService.deleteTodo(id: todo.id);
+                        if (context.mounted) Navigator.of(context).pop();
+                      }
+                    },
+                    icon: const Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    ),
+                  ),
                 ),
                 const Text('To-do',
                     style: TextStyle(color: Palette.textColor, fontSize: 14)),

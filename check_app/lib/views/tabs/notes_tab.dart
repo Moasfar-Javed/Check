@@ -1,3 +1,4 @@
+import 'package:check_app/utilities/routes.dart';
 import 'package:check_app/widgets/horizontal_notes_list.dart';
 import 'package:flutter/material.dart';
 import '../../services/crud/note_service.dart';
@@ -45,7 +46,10 @@ class _NotesTabState extends State<NotesTab> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: Palette.primaryColorVariant,
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context)
+              .pushNamed(crudNotesRoute);
+        },
         child: const Icon(
           Icons.add,
         ),

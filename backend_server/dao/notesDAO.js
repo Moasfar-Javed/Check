@@ -59,7 +59,6 @@ export default class TodosDAO {
     }
   }
 
-  //mark as completed
   static async updateNote(id, title, note, isHidden, isFavourite, accessed_on) {
     try {
       const updateResponse = await notes.updateOne(
@@ -80,6 +79,7 @@ export default class TodosDAO {
       return { Error: e };
     }
   }
+
 
   static async deleteNote(id) {
     try {

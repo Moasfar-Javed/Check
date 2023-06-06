@@ -14,7 +14,7 @@ class GradientButton extends StatelessWidget {
     required this.onPressed,
     required this.child,
     this.borderRadius,
-    this.width = 200,
+    this.width,
     this.height = 44.0,
     this.gradient = const LinearGradient(colors: [Color(0xFFC43726), Color(0xFFFC9E3A)]),
   }) : super(key: key);
@@ -23,8 +23,8 @@ class GradientButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final borderRadius = this.borderRadius ?? BorderRadius.circular(20);
     return Container(
-      width: width,
-      height: height,
+      width: width ?? 200,
+      height: height ,
       decoration: BoxDecoration(
         gradient: gradient,
         borderRadius: borderRadius,
