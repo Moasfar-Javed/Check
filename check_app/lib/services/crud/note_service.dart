@@ -25,6 +25,7 @@ class NoteService {
 
   // functionalities
   Future<void> cacheNotes() async {
+    print(AuthUser.getCurrentUser().email);
     final allNotes = getNotes(email: AuthUser.getCurrentUser().email);
 
     _noteList = await allNotes;
@@ -61,13 +62,13 @@ class NoteService {
       "note": note,
       "isHidden": isHidden,
       "isFavourite": isFavourite,
-      "createdOn": createdOn.toUtc().toString(),
-      "accessedOn": accessedOn.toUtc().toString()
+      "created_on": createdOn.toUtc().toString(),
+      "accessed_on": accessedOn.toUtc().toString()
     };
-
+    print(requestBody.entries);
     var response = await BaseClient()
         .postNoteApi(
-          '/notes?id=${AuthUser.getCurrentUser().email}',
+          '/notes?user=${AuthUser.getCurrentUser().email}',
           requestBody,
         )
         .catchError((e) {});

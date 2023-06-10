@@ -7,13 +7,13 @@ const router = express.Router();
 
 router
   .route("/users")
-  //http://<host_ip>:5000/api/users?email=<xyz>&password=<xyz>
+  //http://<host_ip>:5000/api/users?email=<xyz>
   .get(UsersController.apiGetUser)
-  //http://<host_ip>:5000/api/users username, email, password in the body
+  //http://<host_ip>:5000/api/users username, email in the body
   .post(UsersController.apiPostUser)
-  //http://<host_ip>:5000/api/users?id=<xyz> username, email, password in the body
+  //http://<host_ip>:5000/api/users?email=<xyz> username in the body
   .put(UsersController.apiPutUser)
-  //http://<host_ip>:api/users?id=<xyz>
+  //http://<host_ip>:api/users?email=<xyz>
   .delete(UsersController.apiDeleteUser);
 
 router

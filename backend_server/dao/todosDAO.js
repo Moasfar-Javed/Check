@@ -17,10 +17,10 @@ export default class TodosDAO {
     }
   }
 
-  static async getTodos(id) {
+  static async getTodos(email) {
     let cursor;
     try {
-      cursor = await todos.find({ user_id: id });
+      cursor = await todos.find({ email: email });
 
       return await cursor.toArray();
     } catch (e) {
@@ -29,10 +29,10 @@ export default class TodosDAO {
     }
   }
 
-  static async addTodo(id, description, created, due, tag) {
+  static async addTodo(email, description, created, due, tag) {
     try {
       const todoDoc = {
-        user_id: id,
+        email: email,
         description: description,
         created: created,
         due: due,
@@ -40,7 +40,7 @@ export default class TodosDAO {
         completed_on: null,
         tag: tag,
       };
-      const result = await todos.insertOne(todoDoc);
+      const result = await todos.insertOne(todoDoc); //TODO: DDDDDDDDDDDDDIIIIIIIIIADAKDAKDA
       const insertedId = result.insertedId;
       const addedDocument = await todos.findOne({ _id: insertedId });
 

@@ -1,3 +1,4 @@
+import 'package:check_app/services/crud/user_service.dart';
 import 'package:flutter/material.dart';
 
 import '../services/base_client.dart';
@@ -107,18 +108,20 @@ class _SignUpViewState extends State<SignUpView> {
                     final username = _username.text;
                     final email = _email.text;
                     final password = _password.text;
-                    final user = User(
-                      username: username,
-                      email: email,
-                      password: password,
-                    );
-                    var response = await BaseClient()
-                        .postUserApi('/users', user)
-                        .catchError((e) {});
-                    if (response == null) return;
-                    print('user created');
-                  },
 
+                    await UserService().addUser(username: username, email: email, password: password);
+                  //   final user = User(
+                  //     username: username,
+                  //     email: email,
+                  //     password: password,
+                  //   );
+                  //   var response = await BaseClient()
+                  //       .postUserApi('/users', user)
+                  //       .catchError((e) {});
+                  //   if (response == null) return;
+                     print('user created');
+                  },
+ 
                   child: const Text('Sign Up'),
                 ),
               const SizedBox(height: 25),

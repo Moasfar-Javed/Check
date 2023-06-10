@@ -33,13 +33,13 @@ class _TodoTabState extends State<TodoTab> {
     if (status == "done") {
       return Icon(
         Icons.check_circle_outline,
-        color: Palette.appColorPalette[800]!,
+        //color: Palette.appColorPalette[800]!,
         size: 16,
       );
     } else if (due.isBefore(DateTime.now())) {
       return Icon(
         Icons.alarm_outlined,
-        color: Palette.appColorPalette[800]!,
+        //color: Palette.appColorPalette[800]!,
         size: 14,
       );
     }
@@ -47,25 +47,25 @@ class _TodoTabState extends State<TodoTab> {
       case "work":
         return Icon(
           Icons.work_outline,
-          color: Palette.appColorPalette[800]!,
+          //color: Palette.appColorPalette[800]!,
           size: 14,
         );
       case "home":
         return Icon(
           Icons.home_outlined,
-          color: Palette.appColorPalette[800]!,
+          //color: Palette.appColorPalette[800]!,
           size: 16,
         );
       case "study":
         return Icon(
           Icons.school_outlined,
-          color: Palette.appColorPalette[800]!,
+          //color: Palette.appColorPalette[800]!,
           size: 16,
         );
       default:
         return Icon(
           Icons.check_circle_outline,
-          color: Palette.appColorPalette[800]!,
+          //color: Palette.appColorPalette[800]!,
           size: 16,
         );
     }
@@ -73,7 +73,7 @@ class _TodoTabState extends State<TodoTab> {
 
   Color _getColor(String tag, String status, DateTime due) {
     if (status == "done") {
-      return Palette.appColorPalette[500]!;
+      return Palette.backgroundColorShade;
     } else if (due.isBefore(DateTime.now())) {
       return Palette.redTodo;
     }
@@ -85,7 +85,7 @@ class _TodoTabState extends State<TodoTab> {
       case "study":
         return Palette.studyTodo;
       default:
-        return Palette.appColorPalette[500]!;
+        return Palette.backgroundColorShade;
     }
   }
 

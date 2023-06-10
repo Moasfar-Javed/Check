@@ -12,7 +12,7 @@ export default class NotesController {
 
   static async apiPostNote(req, res, next) {
     try {
-      const user = req.query.user;
+      const email = req.query.user;
       const title = req.body.title;
       const note = req.body.note;
       const isHidden = req.body.isHidden;
@@ -21,7 +21,7 @@ export default class NotesController {
       const accessed_on = req.body.accessed_on;
 
       const noteResponse = await NotesDAO.addNote(
-        user,
+        email,
         title,
         note,
         isHidden,

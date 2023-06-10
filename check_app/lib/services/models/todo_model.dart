@@ -8,7 +8,7 @@ String todoToJson(List<Todo> data) =>
 
 class Todo {
   String id;
-  String userId;
+  String email;
   String description;
   DateTime created;
   DateTime due;
@@ -18,7 +18,7 @@ class Todo {
 
   Todo({
     required this.id,
-    required this.userId,
+    required this.email,
     required this.description,
     required this.created,
     required this.due,
@@ -29,7 +29,7 @@ class Todo {
 
   factory Todo.fromJson(Map<String, dynamic> json) => Todo(
         id: json["_id"],
-        userId: json["user_id"],
+        email: json["email"],
         description: json["description"],
         created: DateTime.parse(json["created"]),
         due: DateTime.parse(json["due"]),
@@ -41,7 +41,7 @@ class Todo {
       );
 
   Map<String, dynamic> toJson() => {
-        "user_id": userId,
+        "email": email,
         "description": description,
         "created": created.toUtc().toString(),
         "due": due.toUtc().toString(),

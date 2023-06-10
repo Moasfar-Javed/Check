@@ -1,9 +1,7 @@
 import 'dart:core';
-
 import 'package:check_app/services/crud/note_service.dart';
 import 'package:check_app/services/models/note_model.dart';
 import 'package:check_app/utilities/pallete.dart';
-import 'package:check_app/widgets/gradient_button.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -32,8 +30,7 @@ class _CrudNoteViewState extends State<CrudNoteView> {
     setFavouriteState();
     setLockState();
     setControllersToNote();
-
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       final keyboardVisibility = MediaQuery.of(context).viewInsets.bottom != 0;
       if (keyboardVisibility) {
         _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
@@ -131,13 +128,21 @@ class _CrudNoteViewState extends State<CrudNoteView> {
     }
   }
 
-    @override
+  @override
   Widget build(BuildContext context) {
+    // if (ModalRoute.of(context)?.settings.arguments != null) {
+    //   note = ModalRoute.of(context)?.settings.arguments as Note;
+    // }
+
     return Scaffold(
       appBar: AppBar(
         actions: [
           IconButton(
-            onPressed: () => setState(() => isFav = !isFav),
+            onPressed: () {
+              print(isFav);
+              setState(() => isFav = !isFav);
+              print(isFav);
+            },
             icon: isFav
                 ? const Icon(Icons.favorite, color: Colors.pink)
                 : const Icon(Icons.favorite_border),
@@ -177,12 +182,23 @@ class _CrudNoteViewState extends State<CrudNoteView> {
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: Column(
                 children: [
-                  TextField(
-                    controller: _title,
-                    maxLines: null,
-                    maxLength: 40,
-                    decoration: const InputDecoration(
-                      hintText: 'Title (optional)',
+                  Text(
+                    'Created: ${setCreatedText()}',
+                    style: const TextStyle(color: Palette.textColorDarker),
+                  ),
+                  Text(
+                    'Accessed: ${setAccessedText()}',
+                    style: const TextStyle(color: Palette.textColorDarker),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 15),
+                    child: TextField(
+                      controller: _title,
+                      maxLines: null,
+                      maxLength: 40,
+                      decoration: const InputDecoration(
+                        hintText: 'Title (optional)',
+                      ),
                     ),
                   ),
                   TextField(

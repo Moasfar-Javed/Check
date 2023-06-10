@@ -1,7 +1,10 @@
 import 'package:check_app/utilities/pallete.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../services/models/note_model.dart';
+import '../utilities/routes.dart';
+import '../views/crud_note_view.dart';
 
 class HorizontalNotesList extends StatefulWidget {
   final List<Note> notesList;
@@ -15,7 +18,7 @@ class HorizontalNotesList extends StatefulWidget {
 
 class _HorizontalNotesListState extends State<HorizontalNotesList> {
   late final List<Note> notes;
-  late final listType;
+  late final String listType;
 
   @override
   void initState() {
@@ -59,7 +62,14 @@ class _HorizontalNotesListState extends State<HorizontalNotesList> {
                   ),
                 ),
                 child: ListTile(
-                  onTap: () {},
+                  onTap: () {
+                               Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CrudNoteView(note: note)),
+                    );
+
+                  },
                   title: Text(
                     note.title,
                     maxLines: 3,

@@ -3,9 +3,8 @@ import UsersDAO from "../dao/usersDAO.js";
 export default class UsersController {
   static async apiGetUser(req, res, next) {
     const email = req.query.email;
-    const password = req.query.password;
 
-    const details = await UsersDAO.getUser(email, password);
+    const details = await UsersDAO.getUser(email);
     let response = details;
 
     res.json(response);
@@ -15,9 +14,8 @@ export default class UsersController {
     try {
       const username = req.body.username.toLowerCase();
       const email = req.body.email;
-      const password = req.body.password;
 
-      const userResponse = await UsersDAO.addUser(username, email, password);
+      const userResponse = await UsersDAO.addUser(username, email);
       res.json({ Status: "Success" });
     } catch (e) {
       res.status(500).json({ Error: e.message });
@@ -27,13 +25,9 @@ export default class UsersController {
   static async apiPutUser(req, res, next) {
     try {
       const username = req.body.username.toLowerCase();
-      const email = req.body.email;
-      const password = req.body.password;
       const userResponse = await UsersDAO.updateUser(
-        req.query.id,
-        username,
-        email,
-        password
+        req.query.email,
+        username
       );
 
       var { error } = userResponse;
@@ -53,8 +47,8 @@ export default class UsersController {
 
   static async apiDeleteUser(req, res, next) {
     try {
-      const id = req.query.id;
-      const userResponse = await UsersDAO.deleteUser(id);
+      const email = req.query.email;
+      const userResponse = await UsersDAO.deleteUser(email);
       res.json({ Status: "success" });
     } catch (e) {
       res.status(500).json({ Error: e.message });

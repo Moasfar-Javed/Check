@@ -63,17 +63,6 @@ class _AddTodoCardState extends State<AddTodoCard> {
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 7)),
       selectableDayPredicate: _isDateEnabled,
-      builder: (BuildContext context, Widget? child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: Palette.appColorPalette,
-              onSurface: Colors.black12,
-            ),
-          ),
-          child: child!,
-        );
-      },
     );
 
     if (picked != null) {

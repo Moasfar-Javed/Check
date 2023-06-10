@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:check_app/services/crud/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:gif/gif.dart';
 
@@ -15,7 +16,7 @@ class SignInView extends StatefulWidget {
   State<SignInView> createState() => _SignInViewState();
 }
 
-class _SignInViewState extends State<SignInView> with TickerProviderStateMixin{
+class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
   late final GifController ctrlr;
   late final TextEditingController _email;
   late final TextEditingController _password;
@@ -61,16 +62,16 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin{
                   fontWeight: FontWeight.w800,
                 ),
               ),
-                 Gif(
-                  controller: ctrlr,
-                  width: 200,
-                  height: 200,
-                  //duration: const Duration(seconds: 4),
-                  autostart: Autostart.once,
-                  placeholder: (context) =>
-                        const Center(child: CircularProgressIndicator()),
-                  image: const AssetImage('assets/images/login.gif'),
-                ),
+              Gif(
+                controller: ctrlr,
+                width: 200,
+                height: 200,
+                //duration: const Duration(seconds: 4),
+                autostart: Autostart.once,
+                placeholder: (context) =>
+                    const Center(child: CircularProgressIndicator()),
+                image: const AssetImage('assets/images/login.gif'),
+              ),
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: FocusTraversalGroup(
@@ -89,7 +90,6 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin{
                         },
                         decoration: const InputDecoration(
                           hintText: 'Email',
-                          
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -111,7 +111,6 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin{
                               });
                             },
                           ),
-                          
                         ),
                       ),
                     ],
@@ -124,28 +123,33 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin{
                   final email = _email.text;
                   final password = _password.text;
 
-                  var response = await BaseClient()
-                      .getUserApi('/users?email=$email&password=$password')
-                      .catchError((e) {});
-                  if (response != null) {
-                    List<dynamic> jsonResponse = jsonDecode(response);
-
-                    if (jsonResponse.isNotEmpty) {
-                      AuthUser user = AuthUser.fromJson(jsonResponse[0]);
-                      print(user.email);
-                      //AuthUser.signOut();
-                      if (context.mounted) {
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                            homeRoute, (route) => false);
-                      }
-                    }
-                  } else {
-                    return;
+                  await UserService().signInUser(email: email, password: password);
+                  if (context.mounted) {
+                    Navigator.of(context)
+                        .pushNamedAndRemoveUntil(homeRoute, (route) => false);
                   }
+
+                  // var response = await BaseClient()
+                  //     .getUserApi('/users?email=$email&password=$password')
+                  //     .catchError((e) {});
+                  // if (response != null) {
+                  //   List<dynamic> jsonResponse = jsonDecode(response);
+
+                  //   if (jsonResponse.isNotEmpty) {
+                  //     AuthUser user = AuthUser.fromJson(jsonResponse[0]);
+                  //     print(user.email);
+                  //     //AuthUser.signOut();
+                  //     if (context.mounted) {
+                  //       Navigator.of(context).pushNamedAndRemoveUntil(
+                  //           homeRoute, (route) => false);
+                  //     }
+                  //   }
+                  // } else {
+                  //   return;
+                  // }
                 },
-                 child: const Text('Sign In'),
+                child: const Text('Sign In'),
               ),
-               
               const SizedBox(height: 25),
               const Text("Don't have an account?"),
               const SizedBox(height: 10),

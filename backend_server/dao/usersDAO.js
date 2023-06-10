@@ -1,3 +1,5 @@
+
+
 import mongodb from "mongodb";
 const ObjectId = mongodb.ObjectId;
 
@@ -10,6 +12,7 @@ export default class UsersDAO {
     }
     try {
       users = await conn.db(process.env.MONGO_NS).collection("Users");
+
     } catch (e) {
       console.error(
         `Unable to establish a collection handle in usersDAO: ${e}`
@@ -17,10 +20,10 @@ export default class UsersDAO {
     }
   }
 
-  static async getUser(email, password) {
+  static async getUser(email) {
     let cursor;
     try {
-      cursor = await users.find({ email: email, password: password });
+      cursor = await users.find({email: email});
 
       //const details = await cursor.toArray();
       return  await cursor.toArray() 
@@ -30,30 +33,33 @@ export default class UsersDAO {
     }
   }
 
-  static async addUser(username, email, password) {
+  static async addUser(username, email) {
     try {
       const userDoc = {
         username: username,
         email: email,
-        password: password,
       };
-      return await users.insertOne(userDoc);
+      console.log(email)
+      const result = await users.insertOne(userDoc);
+      const insertedId = result.insertedId;
+      const addedDocument = await users.findOne({ _id: insertedId });
+      console.log(addedDocument)
+      return addedDocument;
     } catch (e) {
       console.error(`Unable to add employee: ${e}`);
       return { Error: e };
     }
   }
 
-  static async updateUser(id, username, email, password) {
+  static async updateUser(username, email) {
     try {
       const updateResponse = await users.updateOne(
-        { _id: ObjectId(id) },
+        { email: email },
         {
           $set: {
             username: username,
             email: email,
-            password: password,
-          },
+            },
         }
       );
       return updateResponse;
@@ -63,10 +69,10 @@ export default class UsersDAO {
     }
   }
 
-  static async deleteUser(id) {
+  static async deleteUser(email) {
     try {
       const deleteResponse = await users.deleteOne({
-        _id: ObjectId(id),
+        email: email,
       });
       return deleteResponse;
     } catch (e) {

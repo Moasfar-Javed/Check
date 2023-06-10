@@ -2,9 +2,9 @@ import TodosDAO from "../dao/todosDAO.js";
 
 export default class TodosController {
   static async apiGetTodos(req, res, next) {
-    const id = req.query.id;
+    const email = req.query.email;
 
-    const details = await TodosDAO.getTodos(id);
+    const details = await TodosDAO.getTodos(email);
     let response = details;
 
     res.json(response);
@@ -12,14 +12,14 @@ export default class TodosController {
 
   static async apiPostTodo(req, res, next) {
     try {
-      const id = req.query.id;
+      const email = req.query.email;
       const description = req.body.description.toLowerCase();
       const created = req.body.created;
       const due = req.body.due;
       const tag = req.body.tag.toLowerCase();
 
       const todoResponse = await TodosDAO.addTodo(
-        id,
+        email,
         description,
         created,
         due,

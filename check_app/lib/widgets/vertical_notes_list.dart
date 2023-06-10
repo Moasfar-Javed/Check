@@ -1,9 +1,10 @@
-import 'package:check_app/widgets/add_edit_note_card.dart';
+import 'package:check_app/views/crud_note_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 
 import '../services/models/note_model.dart';
 import '../utilities/pallete.dart';
+import '../utilities/routes.dart';
 
 class VerticalNotesList extends StatefulWidget {
   final List<Note> notesList;
@@ -39,14 +40,11 @@ class _VerticalNotesListState extends State<VerticalNotesList> {
         Note note = notes[index];
         return ListTile(
           onTap: () {
-          showAnimatedDialog(
-              context: context,
-              animationType: DialogTransitionType.slideFromBottom,
-              barrierDismissible: true,
-              builder: (BuildContext context) {
-                return  AddEditNoteCard(note: note);
-              },
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CrudNoteView(note: note)),
             );
+           // Navigator.of(context).pushNamed(crudNotesRoute, arguments: note);
           },
           contentPadding: const EdgeInsets.symmetric(horizontal: 8),
           //dense: true,

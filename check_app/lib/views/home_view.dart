@@ -1,3 +1,4 @@
+import 'package:check_app/services/crud/user_service.dart';
 import 'package:check_app/views/tabs/clock_tab.dart';
 import 'package:check_app/views/tabs/events_tab.dart';
 import 'package:check_app/views/tabs/notes_tab.dart';
@@ -79,14 +80,14 @@ class _HomViewState extends State<HomeView> {
                         color: Colors.red,
                       ),
                     ),
-                    onTap: () {
+                    onTap: () async {
                       // Future.delayed(const Duration(seconds: 0));
                       // print(Dialogs.showConfirmationDialog(
                       //     context: context,
                       //     type: 'neutral',
                       //     text: 'Are you sure you want to sign out?',
                       //     button: 'Sign Out'));
-                      AuthUser.signOut();
+                      await UserService().logOut();
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         if (context.mounted) {
                           Navigator.of(context).pushNamedAndRemoveUntil(
@@ -101,7 +102,7 @@ class _HomViewState extends State<HomeView> {
                   child: Text(
                     avatarLetter,
                     style: const TextStyle(
-                      color: Palette.text2Color,
+                      color: Palette.textColor,
                     ),
                   ),
                 ),

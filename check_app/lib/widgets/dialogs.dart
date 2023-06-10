@@ -50,7 +50,7 @@ class Dialogs {
                         backgroundColor: (type == 'delete')
                             ? Colors.red.shade400
                             : (type == 'neutral')
-                                ? Palette.appColorPalette
+                                ? Palette.primaryColorVariant
                                 : Palette.success,
                       ),
                       child: Text(button),
