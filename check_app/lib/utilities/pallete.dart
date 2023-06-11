@@ -34,22 +34,6 @@ class Palette {
       onBackground: textColor,
     ),
     scaffoldBackgroundColor: backgroundColor,
-    // elevatedButtonTheme: ElevatedButtonThemeData(
-    //   style: ButtonStyle(
-    //     backgroundColor: MaterialStateProperty.all<Color>(primaryColor),
-    //     foregroundColor: MaterialStateProperty.all<Color>(textColor),
-    //     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-    //       RoundedRectangleBorder(
-    //         borderRadius: BorderRadius.circular(
-    //             20.0), // Adjust the border radius as needed
-    //       ),
-    //     ),
-    //     minimumSize: MaterialStateProperty.all<Size>(
-    //       const Size(200, 50), // Adjust the width and height as needed
-    //     ),
-    //   ),
-
-    // ),
     textButtonTheme: TextButtonThemeData(
       style: ButtonStyle(
         foregroundColor: MaterialStateProperty.all<Color>(primaryColor),
@@ -67,6 +51,25 @@ class Palette {
         borderSide: const BorderSide(color: accentColor),
         borderRadius: BorderRadius.circular(8),
       ),
+    ),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: Colors.transparent,
+      foregroundColor: Colors.white,
+      elevation: 0,
+      splashColor: Colors.transparent,
+      hoverColor: Colors.transparent,
+      focusColor: Colors.transparent,
+      hoverElevation: 0,
+      focusElevation: 0,
+      disabledElevation: 0,
+      highlightElevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+      // Use a gradient as the background color of the button
+      // You can adjust the gradient colors or settings as needed
+      // Here's an example using a linear gradient:
+      // linearGradient: LinearGradient(
+      //   colors: [Color(0xFFC43726), Color(0xFFFC9E3A)],
+      // ),
     ),
   );
 }

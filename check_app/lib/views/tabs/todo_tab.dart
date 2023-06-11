@@ -31,13 +31,13 @@ class _TodoTabState extends State<TodoTab> {
 
   Icon _getIcon(String tag, String status, DateTime due) {
     if (status == "done") {
-      return Icon(
+      return const Icon(
         Icons.check_circle_outline,
         //color: Palette.appColorPalette[800]!,
         size: 16,
       );
     } else if (due.isBefore(DateTime.now())) {
-      return Icon(
+      return const Icon(
         Icons.alarm_outlined,
         //color: Palette.appColorPalette[800]!,
         size: 14,
@@ -45,25 +45,25 @@ class _TodoTabState extends State<TodoTab> {
     }
     switch (tag) {
       case "work":
-        return Icon(
+        return const Icon(
           Icons.work_outline,
           //color: Palette.appColorPalette[800]!,
           size: 14,
         );
       case "home":
-        return Icon(
+        return const Icon(
           Icons.home_outlined,
           //color: Palette.appColorPalette[800]!,
           size: 16,
         );
       case "study":
-        return Icon(
+        return const Icon(
           Icons.school_outlined,
           //color: Palette.appColorPalette[800]!,
           size: 16,
         );
       default:
-        return Icon(
+        return const Icon(
           Icons.check_circle_outline,
           //color: Palette.appColorPalette[800]!,
           size: 16,
@@ -136,7 +136,6 @@ class _TodoTabState extends State<TodoTab> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Palette.primaryColorVariant,
         onPressed: () {
           showAnimatedDialog(
             context: context,
@@ -147,9 +146,23 @@ class _TodoTabState extends State<TodoTab> {
             },
           );
         },
-        child: const Icon(
-          Icons.add,
-          
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(colors: [
+              Color(0xFFFC9E3A),
+              Color(0xFFC43726),
+            ]),
+            borderRadius: BorderRadius.circular(50),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black26,
+                offset: Offset(0, 4),
+                blurRadius: 4,
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.all(16),
+          child: const Icon(Icons.add),
         ),
       ),
       body: Column(
@@ -239,21 +252,48 @@ class _TodoTabState extends State<TodoTab> {
                                               ),
                                             ),
                                             child: ListTile(
+                                              horizontalTitleGap: 0,
                                               onTap: () {
                                                 dialog.showTodoDetailsDialog(
                                                     context: context,
                                                     todo: todo);
                                               },
-                                              trailing: Column(
+                                              leading: _getIcon(todo.tag,
+                                                  todo.status, todo.due),
+                                              title: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.stretch,
+                                                mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   const SizedBox(height: 5),
-                                                  _getIcon(todo.tag,
-                                                      todo.status, todo.due),
                                                   const SizedBox(height: 5),
                                                   Text(
-                                                    DateFormat('hh:mm a')
-                                                        .format(todo.due),
-                                                    
+                                                    todo.description,
+                                                    maxLines: 1,
+                                                    softWrap: true,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                        decoration: (todo
+                                                                    .status ==
+                                                                "pending")
+                                                            ? null
+                                                            : TextDecoration
+                                                                .lineThrough),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: Text(
+                                                      DateFormat('hh:mm a')
+                                                          .format(todo.due),
+                                                      style: const TextStyle(
+                                                          color: Palette
+                                                              .textColorVariant,
+                                                          fontSize: 12),
+                                                    ),
                                                   ),
                                                   SizedBox(
                                                     height: (!Platform.isIOS ||
@@ -263,18 +303,7 @@ class _TodoTabState extends State<TodoTab> {
                                                   ),
                                                 ],
                                               ),
-                                              title: Text(
-                                                todo.description,
-                                                maxLines: 1,
-                                                softWrap: true,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    decoration: (todo.status ==
-                                                            "pending")
-                                                        ? null
-                                                        : TextDecoration
-                                                            .lineThrough),
-                                              ),
+
                                               //horizontalTitleGap: 0,
                                               contentPadding:
                                                   const EdgeInsets.symmetric(

@@ -1,9 +1,7 @@
 import 'package:check_app/utilities/pallete.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../services/models/note_model.dart';
-import '../utilities/routes.dart';
 import '../views/crud_note_view.dart';
 
 class HorizontalNotesList extends StatefulWidget {
@@ -17,14 +15,57 @@ class HorizontalNotesList extends StatefulWidget {
 }
 
 class _HorizontalNotesListState extends State<HorizontalNotesList> {
-  late final List<Note> notes;
   late final String listType;
 
   @override
   void initState() {
-    notes = widget.notesList;
     listType = widget.listFor;
+
     super.initState();
+  }
+
+  Row _getRowWithIcons(Note note) {
+    if (note.isFavourite && note.isHidden) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: const [
+          
+          Icon(
+            Icons.lock,
+            color: Palette.textColorVariant,
+            size: 16,
+          ),
+          Icon(
+            Icons.favorite,
+            color: Palette.textColorVariant,
+            size: 16,
+          ),
+        ],
+      );
+    } else if (note.isFavourite) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: const [
+          Icon(Icons.favorite, color: Palette.textColorVariant,
+            size: 16,
+          ),
+        ],
+      );
+    } else if (note.isHidden) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: const [
+          Icon(
+            Icons.lock,
+            color: Palette.textColorVariant,
+            size: 16,
+          ),
+        ],
+      );
+    }
+    return Row(
+      children: const [],
+    );
   }
 
   @override
@@ -36,14 +77,13 @@ class _HorizontalNotesListState extends State<HorizontalNotesList> {
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
-        itemCount: notes.length,
+        itemCount: widget.notesList.length,
         itemBuilder: (context, index) {
-          Note note = notes[index];
+          Note note = widget.notesList[index];
           return SizedBox(
             width: 200,
             height: 100,
             child: Card(
-              
               color: (listType == 'fav')
                   ? Palette.accentColor
                   : Palette.accentColorVariant,
@@ -63,18 +103,27 @@ class _HorizontalNotesListState extends State<HorizontalNotesList> {
                 ),
                 child: ListTile(
                   onTap: () {
-                               Navigator.push(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => CrudNoteView(note: note)),
                     );
-
                   },
-                  title: Text(
-                    note.title,
-                    maxLines: 3,
-                    softWrap: true,
-                    overflow: TextOverflow.ellipsis,
+                  title: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _getRowWithIcons(note),
+                        Text(
+                          note.title,
+                          maxLines: 3,
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        
+                      ],
+                    ),
                   ),
                 ),
               ),

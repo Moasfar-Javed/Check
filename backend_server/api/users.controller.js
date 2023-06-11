@@ -25,10 +25,8 @@ export default class UsersController {
   static async apiPutUser(req, res, next) {
     try {
       const username = req.body.username.toLowerCase();
-      const userResponse = await UsersDAO.updateUser(
-        req.query.email,
-        username
-      );
+      const notesPin = req.body.notes_pin;
+      const userResponse = await UsersDAO.updateUser(req.query.email, username, notesPin);
 
       var { error } = userResponse;
       if (error) {
@@ -36,7 +34,7 @@ export default class UsersController {
       }
 
       if (userResponse.modifiedCount === 0) {
-        throw new Error("Unable to update employee");
+        throw new Error("Unable to update user");
       }
 
       res.json({ Status: "Success" });

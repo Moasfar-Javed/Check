@@ -44,7 +44,6 @@ class _VerticalNotesListState extends State<VerticalNotesList> {
               context,
               MaterialPageRoute(builder: (context) => CrudNoteView(note: note)),
             );
-           // Navigator.of(context).pushNamed(crudNotesRoute, arguments: note);
           },
           contentPadding: const EdgeInsets.symmetric(horizontal: 8),
           //dense: true,

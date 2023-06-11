@@ -2,6 +2,7 @@ import 'dart:core';
 import 'package:check_app/services/crud/note_service.dart';
 import 'package:check_app/services/models/note_model.dart';
 import 'package:check_app/utilities/pallete.dart';
+import 'package:check_app/widgets/dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -130,18 +131,12 @@ class _CrudNoteViewState extends State<CrudNoteView> {
 
   @override
   Widget build(BuildContext context) {
-    // if (ModalRoute.of(context)?.settings.arguments != null) {
-    //   note = ModalRoute.of(context)?.settings.arguments as Note;
-    // }
-
     return Scaffold(
       appBar: AppBar(
         actions: [
           IconButton(
             onPressed: () {
-              print(isFav);
               setState(() => isFav = !isFav);
-              print(isFav);
             },
             icon: isFav
                 ? const Icon(Icons.favorite, color: Colors.pink)
@@ -157,8 +152,20 @@ class _CrudNoteViewState extends State<CrudNoteView> {
                 : const Icon(Icons.lock_open),
           ),
           IconButton(
-            onPressed: () {
-              if (note == null) Navigator.of(context).pop();
+            onPressed: () async {
+              if (note != null) {
+                bool choice = await Dialogs.showConfirmationDialog(
+                  context: context,
+                  type: 'delete',
+                  button: 'Delete',
+                  text: 'Are you sure you want to delete this item?',
+                );
+                if (choice) {
+                  _noteService.deleteNote(id: note!.id);
+                  if (context.mounted) Navigator.of(context).pop();
+                }
+              }
+              
             },
             icon: const Icon(
               Icons.delete,

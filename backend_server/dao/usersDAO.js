@@ -1,5 +1,3 @@
-
-
 import mongodb from "mongodb";
 const ObjectId = mongodb.ObjectId;
 
@@ -12,7 +10,6 @@ export default class UsersDAO {
     }
     try {
       users = await conn.db(process.env.MONGO_NS).collection("Users");
-
     } catch (e) {
       console.error(
         `Unable to establish a collection handle in usersDAO: ${e}`
@@ -23,10 +20,10 @@ export default class UsersDAO {
   static async getUser(email) {
     let cursor;
     try {
-      cursor = await users.find({email: email});
+      cursor = await users.find({ email: email });
 
       //const details = await cursor.toArray();
-      return  await cursor.toArray() 
+      return await cursor.toArray();
     } catch (e) {
       console.error(`Unable to issue find command, ${e}`);
       return { details: [] };
@@ -38,12 +35,13 @@ export default class UsersDAO {
       const userDoc = {
         username: username,
         email: email,
+        notes_pin: null,
       };
-      console.log(email)
+      console.log(email);
       const result = await users.insertOne(userDoc);
       const insertedId = result.insertedId;
       const addedDocument = await users.findOne({ _id: insertedId });
-      console.log(addedDocument)
+      console.log(addedDocument);
       return addedDocument;
     } catch (e) {
       console.error(`Unable to add employee: ${e}`);
@@ -51,7 +49,7 @@ export default class UsersDAO {
     }
   }
 
-  static async updateUser(username, email) {
+  static async updateUser(email, username, notesPin) {
     try {
       const updateResponse = await users.updateOne(
         { email: email },
@@ -59,7 +57,8 @@ export default class UsersDAO {
           $set: {
             username: username,
             email: email,
-            },
+            notes_pin: notesPin,
+          },
         }
       );
       return updateResponse;

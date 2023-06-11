@@ -64,13 +64,13 @@ class UserService {
         '/users}',
         requestBody,
       );
-      print(requestBody.entries);
-      print(response);
       if (response == null) throw NoItemsException();
     } catch (e) {
       print('API request error: $e');
     }
   }
+
+   
 
   Future<void> logOut() async {
     final user = FirebaseAuth.instance.currentUser;

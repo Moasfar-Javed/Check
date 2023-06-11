@@ -34,24 +34,41 @@ class _NotesTabState extends State<NotesTab> {
   }
 
   List<Note> _createRecentNotesList(List<Note> notesList) {
-    List<Note> notes =
-        notesList.where((note) => note.isFavourite == true).toList();
-    Note.sortByAccessedOn(notes);
-    if (notes.length <= 5) return notes;
-    return notes.sublist(0, 5);
+    notesList.sort((a, b) => b.accessedOn.compareTo(a.accessedOn));
+    DateTime now = DateTime.now();
+
+    List<Note> notes = notesList
+        .where((note) => note.accessedOn.isBefore(now))
+        .take(5)
+        .toList();
+
+    return notes;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Palette.primaryColorVariant,
         onPressed: () {
-          Navigator.of(context)
-              .pushNamed(crudNotesRoute);
+          Navigator.of(context).pushNamed(crudNotesRoute);
         },
-        child: const Icon(
-          Icons.add,
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(colors: [
+              Color(0xFFFC9E3A),
+              Color(0xFFC43726),
+            ]),
+            borderRadius: BorderRadius.circular(50),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black26,
+                offset: Offset(0, 4),
+                blurRadius: 4,
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.all(16),
+          child: const Icon(Icons.add),
         ),
       ),
       body: Padding(
@@ -89,9 +106,11 @@ class _NotesTabState extends State<NotesTab> {
                                   children: [
                                     const Padding(
                                       padding: EdgeInsets.only(bottom: 10),
-                                      child: Text('Recents',
-                                          style: TextStyle(
-                                              color: Palette.textColorVariant)),
+                                      child: Text(
+                                        'Recents',
+                                        style: TextStyle(
+                                            color: Palette.textColorVariant),
+                                      ),
                                     ),
                                     (recentList.isEmpty)
                                         ? const Text('You have no recent notes')
@@ -101,9 +120,11 @@ class _NotesTabState extends State<NotesTab> {
                                     const Padding(
                                       padding:
                                           EdgeInsets.symmetric(vertical: 10),
-                                      child: Text('Favourites',
-                                          style: TextStyle(
-                                              color: Palette.textColorVariant)),
+                                      child: Text(
+                                        'Favourites',
+                                        style: TextStyle(
+                                            color: Palette.textColorVariant),
+                                      ),
                                     ),
                                     (favList.isEmpty)
                                         ? const Text(
@@ -112,9 +133,11 @@ class _NotesTabState extends State<NotesTab> {
                                             notesList: favList, listFor: 'fav'),
                                     const Padding(
                                       padding: EdgeInsets.only(top: 10),
-                                      child: Text('All Notes',
-                                          style: TextStyle(
-                                              color: Palette.textColorVariant)),
+                                      child: Text(
+                                        'All Notes',
+                                        style: TextStyle(
+                                            color: Palette.textColorVariant),
+                                      ),
                                     ),
                                     VerticalNotesList(notesList: allNotes),
                                     const SizedBox(height: 60)

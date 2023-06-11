@@ -66,6 +66,43 @@ class Dialogs {
     return result ?? false;
   }
 
+  static void showLoadingDialog(
+      {required BuildContext context, required String text}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          ),
+          contentPadding: EdgeInsets.zero,
+          content: SizedBox(
+            width: 300,
+            child: IntrinsicHeight(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 15.0, right: 15.0, top: 20, bottom: 30),
+                    child: Text(text),
+                  ),
+                  const SizedBox(
+                    height: 40,
+                    width: 40,
+                    child: CircularProgressIndicator(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   void showTodoDetailsDialog(
       {required BuildContext context, required Todo todo}) {
     showDialog(
@@ -74,70 +111,156 @@ class Dialogs {
         return AlertDialog(
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
-          content: IntrinsicHeight(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 180),
-                  child: IconButton(
-                    onPressed: () async {
-                      bool choice = await showConfirmationDialog(
-                        context: context,
-                        type: 'delete',
-                        button: 'Delete',
-                        text: 'Are you sure you want to delete this item?',
-                      );
-                      //print(choice);
-                      if (choice) {
-                        _todoService.deleteTodo(id: todo.id);
-                        if (context.mounted) Navigator.of(context).pop();
-                      }
-                    },
-                    icon: const Icon(
-                      Icons.delete,
-                      color: Colors.red,
+          contentPadding: EdgeInsets.zero,
+          content: SizedBox(
+            width: 300,
+            child: IntrinsicHeight(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 200),
+                          child: IconButton(
+                            onPressed: () async {
+                              bool choice = await showConfirmationDialog(
+                                context: context,
+                                type: 'delete',
+                                button: 'Delete',
+                                text:
+                                    'Are you sure you want to delete this item?',
+                              );
+                              //print(choice);
+                              if (choice) {
+                                _todoService.deleteTodo(id: todo.id);
+                                if (context.mounted) Navigator.of(context).pop();
+                              }
+                            },
+                            icon: const Icon(
+                              Icons.delete,
+                              color: Colors.red,
+                            ),
+                          ),
+                        ),
+                        const Text('To-do',
+                            style: TextStyle(
+                                color: Palette.textColorVariant, fontSize: 14)),
+                        Text(
+                          todo.description,
+                        ),
+                        const SizedBox(height: 10),
+                        const Text('Status',
+                            style: TextStyle(
+                                color: Palette.textColorVariant, fontSize: 14)),
+                        Text(
+                          todo.status,
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            const Text(
+                              'Due Date',
+                              style: TextStyle(
+                                  color: Palette.textColorVariant,
+                                  fontSize: 14),
+                            ),
+                            const SizedBox(
+                              width: 70,
+                            ),
+                            todo.status != 'done'
+                                ? Container()
+                                : const Text(
+                                    'Done Date',
+                                    style: TextStyle(
+                                        color: Palette.textColorVariant,
+                                        fontSize: 14),
+                                  ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              '${todo.due.day}/${todo.due.month}/${todo.due.year}',
+                            ),
+                            const SizedBox(
+                              width: 51,
+                            ),
+                            todo.status != 'done'
+                                ? Container()
+                                : Text(
+                                    '${todo.completedOn!.day}/${todo.completedOn!.month}/${todo.completedOn!.year}'),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            const Text('Due Time',
+                                style: TextStyle(
+                                    color: Palette.textColorVariant,
+                                    fontSize: 14)),
+                            const SizedBox(
+                              width: 70,
+                            ),
+                            todo.status != 'done'
+                                ? Container()
+                                : const Text(
+                                    'Done Time',
+                                    style: TextStyle(
+                                        color: Palette.textColorVariant,
+                                        fontSize: 14),
+                                  ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              DateFormat('hh:mm a').format(todo.due),
+                            ),
+                            const SizedBox(
+                              width: 61,
+                            ),
+                            todo.status != 'done'
+                                ? Container()
+                                : Text(
+                                    DateFormat('hh:mm a')
+                                        .format(todo.completedOn!),
+                                  ),
+                          ],
+                        ),
+                        const SizedBox(height: 25),
+                      ],
                     ),
                   ),
-                ),
-                const Text('To-do',
-                    style: TextStyle(color: Palette.textColor, fontSize: 14)),
-                Text(todo.description,
-                    style: const TextStyle(color: Palette.textColorDarker)),
-                const SizedBox(height: 10),
-                const Text('Status',
-                    style: TextStyle(color: Palette.textColor, fontSize: 14)),
-                Text(todo.status,
-                    style: const TextStyle(color: Palette.textColorDarker)),
-                const SizedBox(height: 10),
-                const Text('Due Date',
-                    style: TextStyle(color: Palette.textColor, fontSize: 14)),
-                Text('${todo.due.day}/${todo.due.month}/${todo.due.year}',
-                    style: const TextStyle(color: Palette.textColorDarker)),
-                const SizedBox(height: 10),
-                const Text('Due Time',
-                    style: TextStyle(color: Palette.textColor, fontSize: 14)),
-                Text(DateFormat('hh:mm a').format(todo.due),
-                    style: const TextStyle(color: Palette.textColorDarker)),
-                const SizedBox(height: 25),
-                SizedBox(
-                  width: 300,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      _todoService.updateTodo(id: todo.id);
-                      Navigator.of(context).pop();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                      backgroundColor: Palette.success,
-                    ),
-                    child: const Text('Mark as Done'),
+                  SizedBox(
+                    height: 50,
+                    child: todo.status == 'done'
+                        ? Container()
+                        : ElevatedButton(
+                            onPressed: () {
+                              _todoService.updateTodo(id: todo.id);
+                              Navigator.of(context).pop();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(20.0),
+                                  bottomRight: Radius.circular(20.0),
+                                ),
+                              ),
+                              backgroundColor: Palette.success,
+                            ),
+                            child: const Text('Mark as Done'),
+                          ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );

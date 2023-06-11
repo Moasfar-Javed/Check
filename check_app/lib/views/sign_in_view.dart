@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:check_app/services/crud/user_service.dart';
+import 'package:check_app/widgets/dialogs.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gif/gif.dart';
 
@@ -123,7 +125,9 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                   final email = _email.text;
                   final password = _password.text;
 
+                  Dialogs.showLoadingDialog(context: context, text: 'Signing you in');
                   await UserService().signInUser(email: email, password: password);
+
                   if (context.mounted) {
                     Navigator.of(context)
                         .pushNamedAndRemoveUntil(homeRoute, (route) => false);
