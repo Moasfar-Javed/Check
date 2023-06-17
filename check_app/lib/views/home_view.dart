@@ -2,7 +2,6 @@ import 'package:check_app/services/crud/user_service.dart';
 import 'package:check_app/views/tabs/clock_tab.dart';
 import 'package:check_app/views/tabs/events_tab.dart';
 import 'package:check_app/views/tabs/notes_tab.dart';
-import 'package:check_app/views/tabs/reminders_tab.dart';
 import 'package:check_app/views/tabs/todo_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -25,7 +24,6 @@ class _HomViewState extends State<HomeView> {
 
   final List<String> _titles = const [
     'To-do',
-    'Reminders',
     'Events',
     'Notes',
     'Clock'
@@ -33,7 +31,6 @@ class _HomViewState extends State<HomeView> {
 
   final List<Widget> _tabs = const [
     TodoTab(),
-    RemindersTab(),
     EventsTab(),
     NotesTab(),
     ClockTab()
@@ -144,9 +141,6 @@ class _HomViewState extends State<HomeView> {
             tabs: const [
               GButton(
                 icon: Icons.playlist_add_check,
-              ),
-              GButton(
-                icon: Icons.notifications_outlined,
               ),
               GButton(
                 icon: Icons.date_range,

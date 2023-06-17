@@ -1,3 +1,4 @@
+import 'package:alarm/alarm.dart';
 import 'package:check_app/services/crud/user_service.dart';
 import 'package:check_app/utilities/pallete.dart';
 import 'package:check_app/utilities/routes.dart';
@@ -9,7 +10,11 @@ import 'package:check_app/views/sign_up_view.dart';
 
 import 'package:flutter/material.dart';
 
-void main() {
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  //await AndroidAlarmManager.initialize();
+  await Alarm.init();
   //Firebase.initializeApp();
   runApp(
     MaterialApp(
