@@ -1,13 +1,7 @@
-import 'dart:convert';
-
 import 'package:check_app/services/crud/user_service.dart';
 import 'package:check_app/widgets/dialogs.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gif/gif.dart';
-
-import '../services/auth_user.dart';
-import '../services/base_client.dart';
 import '../utilities/routes.dart';
 import '../widgets/gradient_button.dart';
 

@@ -1,8 +1,5 @@
 import 'package:check_app/services/crud/user_service.dart';
 import 'package:flutter/material.dart';
-
-import '../services/base_client.dart';
-import '../services/models/user_model.dart';
 import '../utilities/routes.dart';
 import '../widgets/gradient_button.dart';
 

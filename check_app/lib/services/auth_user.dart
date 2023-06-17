@@ -1,16 +1,19 @@
 class AuthUser {
   String username;
   String email;
+  String notesPin;
 
   static AuthUser? _instance;
 
   factory AuthUser({
     required String username,
     required String email,
+    required String notesPin,
   }) {
     _instance ??= AuthUser._internal(
       username: username,
       email: email,
+      notesPin: notesPin,
     );
     return _instance!;
   }
@@ -18,6 +21,7 @@ class AuthUser {
   AuthUser._internal({
     required this.username,
     required this.email,
+    required this.notesPin
   });
 
   factory AuthUser.fromJson(dynamic json) {
@@ -25,6 +29,7 @@ class AuthUser {
       return AuthUser(
         username: json["username"],
         email: json["email"],
+        notesPin: json["pin"]
       );
     } else {
       throw const FormatException("Invalid user data format");
@@ -34,6 +39,7 @@ class AuthUser {
   Map<String, dynamic> toJson() => {
         "email": email,
         "username": username,
+        "pin": notesPin,
       };
 
   static void signOut() {

@@ -1,4 +1,6 @@
+import 'package:check_app/services/crud/event_service.dart';
 import 'package:check_app/services/crud/todo_service.dart';
+import 'package:check_app/services/models/event_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../services/models/todo_model.dart';
@@ -6,7 +8,7 @@ import '../utilities/pallete.dart';
 
 class Dialogs {
   TodoService _todoService = TodoService();
-
+  EventService _eventService = EventService();
   static Future<bool> showConfirmationDialog(
       {required BuildContext context,
       required type,
@@ -140,7 +142,8 @@ class Dialogs {
                               //print(choice);
                               if (choice) {
                                 _todoService.deleteTodo(id: todo.id);
-                                if (context.mounted) Navigator.of(context).pop();
+                                if (context.mounted)
+                                  Navigator.of(context).pop();
                               }
                             },
                             icon: const Icon(
@@ -267,4 +270,156 @@ class Dialogs {
       },
     );
   }
+
+  void showEventDetailsDialog(
+      {required BuildContext context, required Event event}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          contentPadding: EdgeInsets.zero,
+          content: SizedBox(
+            width: 300,
+            child: IntrinsicHeight(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 200),
+                          child: IconButton(
+                            onPressed: () async {
+                              bool choice = await showConfirmationDialog(
+                                context: context,
+                                type: 'delete',
+                                button: 'Delete',
+                                text:
+                                    'Are you sure you want to delete this item?',
+                              );
+                              //print(choice);
+                              if (choice) {
+                                _eventService.deleteEvent(id: event.id);
+                                if (context.mounted)
+                                  Navigator.of(context).pop();
+                              }
+                            },
+                            icon: const Icon(
+                              Icons.delete,
+                              color: Colors.red,
+                            ),
+                          ),
+                        ),
+                        const Text('Title',
+                            style: TextStyle(
+                                color: Palette.textColorVariant, fontSize: 14)),
+                        Text(
+                          event.subject,
+                        ),
+                        const SizedBox(height: 10),
+                        event.isAllDay
+                            ? const Column(
+                                children: [
+                                  Text(
+                                    'Time',
+                                    style: TextStyle(
+                                        color: Palette.textColorVariant,
+                                        fontSize: 14),
+                                  ),
+                                  Text(
+                                    'All Day',
+                                  ),
+                                ],
+                              )
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Row(
+                                    children: [
+                                      Text(
+                                        'Start Date',
+                                        style: TextStyle(
+                                            color: Palette.textColorVariant,
+                                            fontSize: 14),
+                                      ),
+                                      SizedBox(
+                                        width: 70,
+                                      ),
+                                      Text(
+                                        'End Date',
+                                        style: TextStyle(
+                                            color: Palette.textColorVariant,
+                                            fontSize: 14),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        '${event.startTime.day}/${event.startTime.month}/${event.startTime.year}',
+                                      ),
+                                      const SizedBox(
+                                        width: 51,
+                                      ),
+                                      Text(
+                                          '${event.endTime.day}/${event.endTime.month}/${event.endTime.year}'),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  const Row(
+                                    children: [
+                                      Text('Start Time',
+                                          style: TextStyle(
+                                              color: Palette.textColorVariant,
+                                              fontSize: 14)),
+                                      SizedBox(
+                                        width: 70,
+                                      ),
+                                      Text(
+                                        'End Time',
+                                        style: TextStyle(
+                                            color: Palette.textColorVariant,
+                                            fontSize: 14),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        DateFormat('hh:mm a')
+                                            .format(event.startTime),
+                                      ),
+                                      const SizedBox(
+                                        width: 61,
+                                      ),
+                                      Text(
+                                        DateFormat('hh:mm a')
+                                            .format(event.endTime),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                        const SizedBox(height: 40),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+
 }

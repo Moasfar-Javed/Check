@@ -1,5 +1,4 @@
 import 'package:check_app/utilities/pallete.dart';
-import 'package:check_app/widgets/gradient_button.dart';
 import 'package:flutter/material.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
@@ -14,7 +13,7 @@ class _StopwatchTabState extends State<StopwatchTab>
     with SingleTickerProviderStateMixin {
   final StopWatchTimer _stopWatchTimer =
       StopWatchTimer(mode: StopWatchMode.countUp);
-  final _isHours = true;
+  
   late AnimationController _animationController;
   bool isStarted = false;
 

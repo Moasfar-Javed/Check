@@ -1,4 +1,6 @@
+import 'package:check_app/services/crud/note_service.dart';
 import 'package:check_app/utilities/pallete.dart';
+import 'package:check_app/widgets/gradient_button.dart';
 import 'package:flutter/material.dart';
 
 import '../services/models/note_model.dart';
@@ -16,20 +18,87 @@ class HorizontalNotesList extends StatefulWidget {
 
 class _HorizontalNotesListState extends State<HorizontalNotesList> {
   late final String listType;
+  late final TextEditingController _password;
+  final NoteService _noteService = NoteService();
 
   @override
   void initState() {
     listType = widget.listFor;
+    _password = TextEditingController();
 
     super.initState();
   }
 
+  void showAuthDialog({required BuildContext context, required Note note}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Palette.backgroundColor,
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          contentPadding: EdgeInsets.zero,
+          content: SizedBox(
+            width: 300,
+            child: IntrinsicHeight(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: GestureDetector(
+                      onTap: () =>
+                          FocusManager.instance.primaryFocus?.unfocus(),
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 40),
+                          TextField(
+                            maxLength: 4,
+                            controller: _password,
+                            autocorrect: false,
+                            enableSuggestions: false,
+                            obscureText: true,
+                            decoration: const InputDecoration(
+                              prefixIcon: Icon(Icons.lock_person),
+                              hintText: 'Pin',
+                              counterText: '',
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          GradientButton(
+                              onPressed: () {
+                                if (_noteService.unlockNote(_password.text)) {
+                                  Navigator.of(context).pop();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            CrudNoteView(note: note)),
+                                  );
+                                }
+                              },
+                              child: const Text('Unlock')),
+                          const SizedBox(height: 40),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Row _getRowWithIcons(Note note) {
     if (note.isFavourite && note.isHidden) {
-      return Row(
+      return const Row(
         mainAxisAlignment: MainAxisAlignment.end,
-        children: const [
-          
+        children: [
           Icon(
             Icons.lock,
             color: Palette.textColorVariant,
@@ -43,18 +112,20 @@ class _HorizontalNotesListState extends State<HorizontalNotesList> {
         ],
       );
     } else if (note.isFavourite) {
-      return Row(
+      return const Row(
         mainAxisAlignment: MainAxisAlignment.end,
-        children: const [
-          Icon(Icons.favorite, color: Palette.textColorVariant,
+        children: [
+          Icon(
+            Icons.favorite,
+            color: Palette.textColorVariant,
             size: 16,
           ),
         ],
       );
     } else if (note.isHidden) {
-      return Row(
+      return const Row(
         mainAxisAlignment: MainAxisAlignment.end,
-        children: const [
+        children: [
           Icon(
             Icons.lock,
             color: Palette.textColorVariant,
@@ -63,8 +134,8 @@ class _HorizontalNotesListState extends State<HorizontalNotesList> {
         ],
       );
     }
-    return Row(
-      children: const [],
+    return const Row(
+      children: [],
     );
   }
 
@@ -103,11 +174,15 @@ class _HorizontalNotesListState extends State<HorizontalNotesList> {
                 ),
                 child: ListTile(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CrudNoteView(note: note)),
-                    );
+                    if (note.isHidden) {
+                      showAuthDialog(context: context, note: note);
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CrudNoteView(note: note)),
+                      );
+                    }
                   },
                   title: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
@@ -121,7 +196,6 @@ class _HorizontalNotesListState extends State<HorizontalNotesList> {
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        
                       ],
                     ),
                   ),

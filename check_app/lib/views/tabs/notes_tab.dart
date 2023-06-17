@@ -1,4 +1,5 @@
 import 'package:check_app/utilities/routes.dart';
+import 'package:check_app/widgets/gradient_button.dart';
 import 'package:check_app/widgets/horizontal_notes_list.dart';
 import 'package:flutter/material.dart';
 import '../../services/crud/note_service.dart';
@@ -16,7 +17,7 @@ class NotesTab extends StatefulWidget {
 
 class _NotesTabState extends State<NotesTab> {
   late final NoteService _noteService;
-  final Dialogs dialog = Dialogs();
+
 
   @override
   void initState() {
@@ -44,6 +45,8 @@ class _NotesTabState extends State<NotesTab> {
 
     return notes;
   }
+
+ 
 
   @override
   Widget build(BuildContext context) {

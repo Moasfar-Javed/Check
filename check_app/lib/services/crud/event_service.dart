@@ -7,13 +7,13 @@ import 'package:check_app/services/models/event_model.dart';
 import '../base_client.dart';
 import '../defined_exceptions.dart';
 
-class EventSevice {
+class EventService {
   List<Event> _eventList = [];
   //creating a stream and a streamcontroller
-  static final EventSevice _shared = EventSevice._sharedInstance();
+  static final EventService _shared = EventService._sharedInstance();
   late final StreamController<List<Event>> _eventStreamController;
 
-  EventSevice._sharedInstance() {
+  EventService._sharedInstance() {
     _eventStreamController = StreamController<List<Event>>.broadcast(
       onListen: () {
         _eventStreamController.sink.add(_eventList);
@@ -21,7 +21,7 @@ class EventSevice {
     );
   }
 
-  factory EventSevice() => _shared;
+  factory EventService() => _shared;
 
   Stream<List<Event>> get allEvents => _eventStreamController.stream;
 
@@ -56,7 +56,6 @@ class EventSevice {
     required DateTime endTime,
     required String subject,
     required String color,
-    required String reccuranceRule,
     required bool isAllDay,
   }) async {
     final Map<String, dynamic> requestBody = {
@@ -67,15 +66,18 @@ class EventSevice {
       "is_all_day": isAllDay
     };
 
+    //print(requestBody);
     var response = await BaseClient()
         .postEventApi(
-          '/user?user=${AuthUser.getCurrentUser().email}',
+          '/events?user=${AuthUser.getCurrentUser().email}',
           requestBody,
         )
         .catchError((e) {});
+    print(response);
     if (response == null) return;
     final jsonResponse = jsonDecode(response);
     Event eventReponse = Event.fromJson(jsonResponse);
+
     _eventList.add(eventReponse);
     _eventStreamController.add(_eventList);
   }
@@ -112,7 +114,7 @@ class EventSevice {
 
   Future<void> deleteEvent({required id}) async {
     final response =
-        await BaseClient().deleteEventApi('/user?id=$id').catchError((e) {});
+        await BaseClient().deleteEventApi('/events?id=$id').catchError((e) {});
     if (response == null) throw ApiException;
     final jsonResponse = jsonDecode(response);
     try {

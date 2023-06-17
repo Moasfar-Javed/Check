@@ -134,4 +134,8 @@ class NoteService {
       //TODO: throw exception
     }
   }
+
+  bool unlockNote(String enteredPin){
+    return AuthUser.getCurrentUser().notesPin == enteredPin;
+  }
 }

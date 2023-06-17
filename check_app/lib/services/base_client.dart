@@ -173,6 +173,7 @@ class BaseClient {
   Future<dynamic> postEventApi(String api, dynamic object) async {
     var uri = Uri.parse(baseUrl + api);
     var payload = json.encode(object);
+    print(payload);
     var headers = {
       'Content-Type': 'application/json',
     };
@@ -180,7 +181,8 @@ class BaseClient {
     if (response.statusCode == 200 || response.statusCode == 201) {
       return response.body;
     } else {
-      //TODO throw exception
+      print('Error: ${response.statusCode}');
+      print(response.body);
     }
   }
 

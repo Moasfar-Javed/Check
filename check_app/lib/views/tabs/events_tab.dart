@@ -1,6 +1,9 @@
 import 'package:check_app/services/crud/event_service.dart';
 import 'package:check_app/services/models/event_model.dart';
+import 'package:check_app/widgets/add_event_card.dart';
+import 'package:check_app/widgets/dialogs.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class EventsTab extends StatefulWidget {
@@ -11,34 +14,32 @@ class EventsTab extends StatefulWidget {
 }
 
 class _EventsTabState extends State<EventsTab> {
-  late final EventSevice _eventService;
+  Dialogs dialogs = Dialogs();
+  late final EventService _eventService;
 
   @override
   void initState() {
-    _eventService = EventSevice();
+    _eventService = EventService();
     super.initState();
   }
 
+  List<Appointment> getAppointments(List<Event> allEvents) {
+    List<Appointment> meetings = <Appointment>[];
 
+    // Mapping List<Event> to List<Appointment>
+    for (var event in allEvents) {
+      Appointment appointment = Appointment(
+        startTime: event.startTime,
+        endTime: event.endTime,
+        subject: event.subject,
+        color: getTileColor(event.color),
+        isAllDay: event.isAllDay,
+      );
+      meetings.add(appointment);
+    }
 
-
-  // List<Appointment> getAppointments(List<Event> allEvents) {
-  //   List<Appointment> meetings = <Appointment>[];
-
-  //   // Mapping List<Event> to List<Appointment>
-  //   for (var event in allEvents) {
-  //     Appointment appointment = Appointment(
-  //       startTime: event.startTime,
-  //       endTime: event.endTime,
-  //       subject: event.subject,
-  //       color: getTileColor(event.color),
-  //       isAllDay: event.isAllDay,
-  //     );
-  //     meetings.add(appointment);
-  //   }
-
-  //   return meetings;
-  // }
+    return meetings;
+  }
 
   Color getTileColor(String colorText) {
     switch (colorText) {
@@ -60,14 +61,14 @@ class _EventsTabState extends State<EventsTab> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // showAnimatedDialog(
-          //   context: context,
-          //   animationType: DialogTransitionType.slideFromBottom,
-          //   barrierDismissible: true,
-          //   builder: (BuildContext context) {
-          //     return const AddEventCard();
-          //   },
-          // );
+          showAnimatedDialog(
+            context: context,
+            animationType: DialogTransitionType.slideFromBottom,
+            barrierDismissible: true,
+            builder: (BuildContext context) {
+              return const AddEventCard();
+            },
+          );
         },
         child: Container(
           decoration: BoxDecoration(
@@ -88,47 +89,82 @@ class _EventsTabState extends State<EventsTab> {
           child: const Icon(Icons.add),
         ),
       ),
-       body: Column(),
-       // SfCalendar(),
-      // Column(children: [
-      //   FutureBuilder(
-      //     future: _eventService.cacheEvents(),
-      //     builder: (context, snapshot) {
-      //       switch (snapshot.connectionState) {
-      //         case ConnectionState.done:
-      //           return StreamBuilder<List<Event>>(
-      //             stream: _eventService.allEvents,
-      //             builder: (context, snapshot) {
-      //               switch (snapshot.connectionState) {
-      //                 case ConnectionState.waiting:
-      //                   return const CircularProgressIndicator();
-      //                 case ConnectionState.active:
-      //                   var allEvents = snapshot.data as List<Event>;
+      body:
+          //Column(),
+          // SfCalendar(),
+          Column(children: [
+        FutureBuilder(
+          future: _eventService.cacheEvents(),
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.done:
+                return StreamBuilder<List<Event>>(
+                  stream: _eventService.allEvents,
+                  builder: (context, snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                        return const CircularProgressIndicator();
+                      case ConnectionState.active:
+                        var allEvents = snapshot.data as List<Event>;
 
-      //                   return SfCalendar(
-      //                     // view: CalendarView.week,
-      //                     // firstDayOfWeek: 6,
-      //                     // dataSource:
-      //                     //     MeetingDataSource(getAppointments(allEvents)),
-      //                   );
+                        return Expanded(
+                          child: SfCalendar(
+                            view: CalendarView.week,
+                            allowedViews: const [
+                              CalendarView.week,
+                              CalendarView.day,
+                            ],
+                            firstDayOfWeek: 6,
+                            dataSource:
+                                MeetingDataSource(getAppointments(allEvents)),
+                            onTap: (CalendarTapDetails details) {
+                              List<dynamic>? dynamicAppointments =
+                                  details.appointments;
+                              List<Appointment> appointments = [];
 
-      //                 default:
-      //                   return const CircularProgressIndicator();
-      //               }
-      //             },
-      //           );
-      //         default:
-      //           return const CircularProgressIndicator();
-      //       }
-      //     },
-      //   ),
-      // ]),
+                              if (dynamicAppointments != null) {
+                                for (dynamic appointment
+                                    in dynamicAppointments) {
+                                  if (appointment is Appointment) {
+                                    appointments.add(appointment);
+                                  }
+                                }
+                              }
+
+                              if (appointments.isNotEmpty) {
+                                Appointment appointment = appointments[0];
+                                Event selectedEvent = allEvents.firstWhere(
+                                  (event) =>
+                                      event.subject == appointment.subject &&
+                                      event.startTime ==
+                                          appointment.startTime &&
+                                      event.endTime == appointment.endTime,
+                                );
+
+                                dialogs.showEventDetailsDialog(
+                                    context: context, event: selectedEvent);
+                              }
+                            },
+                          ),
+                        );
+
+                      default:
+                        return const CircularProgressIndicator();
+                    }
+                  },
+                );
+              default:
+                return const CircularProgressIndicator();
+            }
+          },
+        ),
+      ]),
     );
   }
 }
 
-// class MeetingDataSource extends CalendarDataSource {
-//   MeetingDataSource(List<Appointment> source) {
-//     appointments = source;
-//   }
-// }
+class MeetingDataSource extends CalendarDataSource {
+  MeetingDataSource(List<Appointment> source) {
+    appointments = source;
+  }
+}

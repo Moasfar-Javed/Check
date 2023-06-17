@@ -1,9 +1,7 @@
 import 'package:alarm/alarm.dart';
-import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:check_app/utilities/pallete.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
 class TimerTab extends StatefulWidget {

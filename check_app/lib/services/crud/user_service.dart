@@ -19,7 +19,7 @@ class UserService {
       return false;
     } else {
       final user = await getUser(email: firebaseUser.email!);
-      AuthUser(username: user.username, email: user.email);
+      AuthUser(username: user.username, email: user.email, notesPin: user.notesPin);
       return true;
     }
   }
@@ -30,7 +30,7 @@ class UserService {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       final user = await getUser(email: email);
-      AuthUser(username: user.username, email: user.email);
+      AuthUser(username: user.username, email: user.email, notesPin: user.notesPin);
     } catch (e) {
       //TODO
     }

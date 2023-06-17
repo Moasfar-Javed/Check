@@ -1,4 +1,5 @@
 import 'package:alarm/alarm.dart';
+import 'package:check_app/services/auth_user.dart';
 import 'package:check_app/services/crud/user_service.dart';
 import 'package:check_app/utilities/pallete.dart';
 import 'package:check_app/utilities/routes.dart';
@@ -63,6 +64,7 @@ class _GuiderState extends State<Guider> {
                 if (snapshot.connectionState == ConnectionState.done) {
                   isUserLoggedIn = snapshot.data as bool;
                   if (isUserLoggedIn) {
+                    
                     // if (user.emailVerified) {
                     //   return const NotesView();
                     // } else {

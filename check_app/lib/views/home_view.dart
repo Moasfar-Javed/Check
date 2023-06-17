@@ -22,12 +22,7 @@ class _HomViewState extends State<HomeView> {
   String avatarLetter =
       AuthUser.getCurrentUser().username.substring(0, 1).toUpperCase();
 
-  final List<String> _titles = const [
-    'To-do',
-    'Events',
-    'Notes',
-    'Clock'
-  ];
+  final List<String> _titles = const ['To-do', 'Events', 'Notes', 'Clock'];
 
   final List<Widget> _tabs = const [
     TodoTab(),
