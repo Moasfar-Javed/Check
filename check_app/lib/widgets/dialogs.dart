@@ -1,6 +1,12 @@
+import 'package:check_app/services/biometric_auth.dart';
 import 'package:check_app/services/crud/event_service.dart';
+import 'package:check_app/services/crud/note_service.dart';
 import 'package:check_app/services/crud/todo_service.dart';
 import 'package:check_app/services/models/event_model.dart';
+import 'package:check_app/services/models/note_model.dart';
+import 'package:check_app/services/shared_prefs.dart';
+import 'package:check_app/views/crud_note_view.dart';
+import 'package:check_app/widgets/gradient_button.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../services/models/todo_model.dart';
@@ -9,6 +15,8 @@ import '../utilities/pallete.dart';
 class Dialogs {
   TodoService _todoService = TodoService();
   EventService _eventService = EventService();
+  NoteService _noteService = NoteService();
+
   static Future<bool> showConfirmationDialog(
       {required BuildContext context,
       required type,
@@ -421,5 +429,103 @@ class Dialogs {
     );
   }
 
+  void showAuthDialog({required BuildContext bcontext, required Note note}) {
+    TextEditingController _password = TextEditingController();
+    showDialog(
+      context: bcontext,
+      builder: (BuildContext context) {
+        return Builder(
+          builder: (BuildContext dialogContext) {
+            return AlertDialog(
+              backgroundColor: Palette.backgroundColor,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20.0)),
+              ),
+              contentPadding: EdgeInsets.zero,
+              content: SizedBox(
+                width: 300,
+                child: IntrinsicHeight(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: GestureDetector(
+                          onTap: () =>
+                              FocusManager.instance.primaryFocus?.unfocus(),
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 40),
+                              TextField(
+                                autofocus: true,
+                                maxLength: 4,
+                                controller: _password,
+                                autocorrect: false,
+                                enableSuggestions: false,
+                                obscureText: true,
+                                keyboardType: TextInputType.phone,
+                                decoration: const InputDecoration(
+                                  prefixIcon: Icon(Icons.lock_person),
+                                  hintText: 'Pin',
+                                  counterText: '',
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              GradientButton(
+                                onPressed: () {
+                                  if (_noteService.unlockNote(_password.text)) {
+                                    Navigator.of(context).pop();
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            CrudNoteView(note: note),
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: const Text('Confirm'),
+                              ),
+                              const SizedBox(height: 40),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 
+  void showBioAuthDialog(
+      {required BuildContext bcontext, required Note note}) async {
+    final isAuthenticated = await BiometricAuth().authenticate();
+    print(isAuthenticated);
+    if (isAuthenticated) {
+      final notePin = await SharedPrefs.readFromPrefs();
+      
+      if (notePin != null) {
+        print(notePin);
+        if (_noteService.unlockNote(notePin)) {
+
+          if (bcontext.mounted) {
+            Navigator.of(bcontext).pop();
+            Navigator.push(
+              bcontext,
+              MaterialPageRoute(
+                builder: (context) => CrudNoteView(note: note),
+              ),
+            );
+          }
+        }
+      }
+    }
+  }
 }

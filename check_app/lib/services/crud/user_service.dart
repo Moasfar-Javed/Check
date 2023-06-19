@@ -52,16 +52,18 @@ class UserService {
     required String email,
     required String password,
   }) async {
-    final Map<String, dynamic> requestBody = {
+    const pin = "1234";
+   final Map<String, dynamic> requestBody = {
       "username": username,
       "email": email,
+      "pin": pin
     };
 
     await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password);
     try {
       var response = await BaseClient().postUserApi(
-        '/users}',
+        '/users',
         requestBody,
       );
       if (response == null) throw NoItemsException();
@@ -70,8 +72,6 @@ class UserService {
     }
   }
 
-   
-
   Future<void> logOut() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -79,4 +79,5 @@ class UserService {
       AuthUser.signOut();
     }
   }
+
 }

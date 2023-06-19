@@ -56,9 +56,14 @@ class _HomViewState extends State<HomeView> {
               padding: const EdgeInsets.only(right: 16),
               child: PopupMenuButton<String>(
                 itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                  const PopupMenuItem<String>(
+                  PopupMenuItem<String>(
                     value: 'Account',
-                    child: Text('Account'),
+                    child: const Text('Account'),
+                    onTap: () {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        Navigator.of(context).pushNamed(account);
+                      });
+                    },
                   ),
                   const PopupMenuItem<String>(
                     value: 'About',
@@ -136,6 +141,7 @@ class _HomViewState extends State<HomeView> {
             tabs: const [
               GButton(
                 icon: Icons.playlist_add_check,
+                iconSize: 26,
               ),
               GButton(
                 icon: Icons.date_range,

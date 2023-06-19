@@ -1,7 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:alarm/alarm.dart';
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import 'package:check_app/main.dart';
 import 'package:check_app/utilities/pallete.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
 class TimerTab extends StatefulWidget {
@@ -13,17 +18,28 @@ class TimerTab extends StatefulWidget {
 
 class _TimerTabState extends State<TimerTab>
     with SingleTickerProviderStateMixin {
-  final StopWatchTimer _stopWatchTimer =
-      StopWatchTimer(mode: StopWatchMode.countDown);
+  late final StopWatchTimer _stopWatchTimer;
 
   late AnimationController _animationController;
   bool isStarted = false;
 
   Duration initialtimer = new Duration();
 
+  Future<void> scheduleOneTimeTimer(Duration scheduledTime) async {
+    await AndroidAlarmManager.oneShot(
+      scheduledTime,
+      46, // Alarm ID
+      _showNotification,
+      exact: true,
+      wakeup: true,
+      rescheduleOnReboot: true,
+    );
+  }
+
   @override
   void initState() {
     super.initState();
+    _stopWatchTimer = StopWatchTimer(mode: StopWatchMode.countDown, presetMillisecond: initialtimer.inMilliseconds);
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 1),
@@ -121,19 +137,14 @@ class _TimerTabState extends State<TimerTab>
                       _stopWatchTimer.setPresetTime(
                           mSec: initialtimer.inMilliseconds);
                       _stopWatchTimer.onStartTimer();
-                      final timerTime = DateTime.now().add(initialtimer);
-                      final alarmSettings = AlarmSettings(
-                          id: 45,
-                          dateTime: timerTime,
-                          assetAudioPath: 'assets/sounds/alarm.mp3',
-                          notificationTitle: 'Timer Expired',
-                          notificationBody: 'Your timer has run out');
-                      await Alarm.set(alarmSettings: alarmSettings);
+                      await scheduleOneTimeTimer(initialtimer);
                     } else {
                       _stopWatchTimer.onStopTimer();
+                      print(_stopWatchTimer.rawTime.value);
                       _stopWatchTimer.onResetTimer();
-                      //print(_stopWatchTimer.rawTime.toString());
-                      await Alarm.stop(45);
+                      print(_stopWatchTimer.rawTime.value);
+                      await AndroidAlarmManager.cancel(46);
+                      await flutterLocalNotificationsPlugin.cancel(46);
                     }
                     setState(() {
                       isStarted = !isStarted;
@@ -151,4 +162,34 @@ class _TimerTabState extends State<TimerTab>
       ),
     );
   }
+}
+
+void _showNotification() async {
+  const int notificationId = 46;
+  const String notificationTitle = 'Timer Expired';
+  const String notificationBody = 'Your time is up';
+  AndroidNotificationDetails androidPlatformChannelSpecifics =
+      AndroidNotificationDetails(
+    'check_application_0401',
+    'CheckApp',
+    importance: Importance.high,
+    priority: Priority.high,
+    enableVibration: true,
+    vibrationPattern: Int64List.fromList(
+        [0, 1000, 500, 1000, 500, 1000]), // Custom vibration pattern
+    sound: const RawResourceAndroidNotificationSound(
+        'alarm'), // Replace 'your_custom_sound' with your custom sound file name
+    playSound: true,
+    //sound: const UriAndroidNotificationSound("assets/sounds/alarm.mp3"),
+    icon: '@drawable/app_icon'
+  );
+  NotificationDetails platformChannelSpecifics =
+      NotificationDetails(android: androidPlatformChannelSpecifics);
+
+  await flutterLocalNotificationsPlugin.show(
+    notificationId,
+    notificationTitle,
+    notificationBody,
+    platformChannelSpecifics,
+  );
 }

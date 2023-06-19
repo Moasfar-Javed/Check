@@ -14,8 +14,8 @@ export default class UsersController {
     try {
       const username = req.body.username.toLowerCase();
       const email = req.body.email;
-
-      const userResponse = await UsersDAO.addUser(username, email);
+      const pin = req.body.pin;
+      const userResponse = await UsersDAO.addUser(username, email, pin);
       res.json({ Status: "Success" });
     } catch (e) {
       res.status(500).json({ Error: e.message });
@@ -25,7 +25,7 @@ export default class UsersController {
   static async apiPutUser(req, res, next) {
     try {
       const username = req.body.username.toLowerCase();
-      const notesPin = req.body.notes_pin;
+      const notesPin = req.body.notes;
       const userResponse = await UsersDAO.updateUser(req.query.email, username, notesPin);
 
       var { error } = userResponse;

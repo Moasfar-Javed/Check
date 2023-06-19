@@ -30,12 +30,12 @@ export default class UsersDAO {
     }
   }
 
-  static async addUser(username, email) {
+  static async addUser(username, email, pin) {
     try {
       const userDoc = {
         username: username,
         email: email,
-        notes_pin: null,
+        pin: pin,
       };
       console.log(email);
       const result = await users.insertOne(userDoc);
@@ -57,7 +57,7 @@ export default class UsersDAO {
           $set: {
             username: username,
             email: email,
-            notes_pin: notesPin,
+            pin: notesPin,
           },
         }
       );
