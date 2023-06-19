@@ -119,32 +119,15 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                   final email = _email.text;
                   final password = _password.text;
 
-                  Dialogs.showLoadingDialog(context: context, text: 'Signing you in');
-                  await UserService().signInUser(email: email, password: password);
+                  Dialogs.showLoadingDialog(
+                      context: context, text: 'Signing you in');
+                  await UserService()
+                      .signInUser(email: email, password: password);
 
                   if (context.mounted) {
                     Navigator.of(context)
                         .pushNamedAndRemoveUntil(homeRoute, (route) => false);
                   }
-
-                  // var response = await BaseClient()
-                  //     .getUserApi('/users?email=$email&password=$password')
-                  //     .catchError((e) {});
-                  // if (response != null) {
-                  //   List<dynamic> jsonResponse = jsonDecode(response);
-
-                  //   if (jsonResponse.isNotEmpty) {
-                  //     AuthUser user = AuthUser.fromJson(jsonResponse[0]);
-                  //     print(user.email);
-                  //     //AuthUser.signOut();
-                  //     if (context.mounted) {
-                  //       Navigator.of(context).pushNamedAndRemoveUntil(
-                  //           homeRoute, (route) => false);
-                  //     }
-                  //   }
-                  // } else {
-                  //   return;
-                  // }
                 },
                 child: const Text('Sign In'),
               ),
@@ -155,7 +138,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                 onTap: () {
                   if (context.mounted) {
                     Navigator.of(context)
-                        .pushNamedAndRemoveUntil(signUpRoute, (route) => false);
+                        .pushNamedAndRemoveUntil(demoRoute, (route) => false);
                   }
                 },
                 child: const Text(

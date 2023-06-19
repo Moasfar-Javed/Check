@@ -25,7 +25,7 @@ export default class UsersController {
   static async apiPutUser(req, res, next) {
     try {
       const username = req.body.username.toLowerCase();
-      const notesPin = req.body.notes;
+      const notesPin = req.body.pin;
       const userResponse = await UsersDAO.updateUser(req.query.email, username, notesPin);
 
       var { error } = userResponse;

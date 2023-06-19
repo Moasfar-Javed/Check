@@ -56,7 +56,6 @@ export default class UsersDAO {
         {
           $set: {
             username: username,
-            email: email,
             pin: notesPin,
           },
         }

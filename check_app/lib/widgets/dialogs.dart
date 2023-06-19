@@ -2,6 +2,7 @@ import 'package:check_app/services/biometric_auth.dart';
 import 'package:check_app/services/crud/event_service.dart';
 import 'package:check_app/services/crud/note_service.dart';
 import 'package:check_app/services/crud/todo_service.dart';
+import 'package:check_app/services/crud/user_service.dart';
 import 'package:check_app/services/models/event_model.dart';
 import 'package:check_app/services/models/note_model.dart';
 import 'package:check_app/services/shared_prefs.dart';
@@ -510,11 +511,10 @@ class Dialogs {
     print(isAuthenticated);
     if (isAuthenticated) {
       final notePin = await SharedPrefs.readFromPrefs();
-      
+
       if (notePin != null) {
         print(notePin);
         if (_noteService.unlockNote(notePin)) {
-
           if (bcontext.mounted) {
             Navigator.of(bcontext).pop();
             Navigator.push(
@@ -528,4 +528,6 @@ class Dialogs {
       }
     }
   }
+
+ 
 }

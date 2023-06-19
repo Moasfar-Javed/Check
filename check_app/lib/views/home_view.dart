@@ -5,6 +5,7 @@ import 'package:check_app/views/tabs/notes_tab.dart';
 import 'package:check_app/views/tabs/todo_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:one_clock/one_clock.dart';
 
 import '../services/auth_user.dart';
 import '../utilities/pallete.dart';
@@ -50,6 +51,28 @@ class _HomViewState extends State<HomeView> {
           ),
         ),
         actions: [
+          const Padding(
+            padding: EdgeInsets.only(right: 4),
+            child: SizedBox(
+              height: 45,
+              width: 45,
+              child: AnalogClock(
+                width: 150.0,
+                isLive: true,
+                hourHandColor: Colors.white,
+                minuteHandColor: Colors.white,
+                secondHandColor: Palette.primaryColor,
+                showSecondHand: true,
+                numberColor: Palette.textColorDarker,
+                showNumbers: false,
+                showAllNumbers: false,
+                textScaleFactor: 1.4,
+                showTicks: true,
+                tickColor: Palette.primaryColorVariant,
+                showDigitalClock: false,
+              ),
+            ),
+          ),
           Align(
             alignment: Alignment.centerRight,
             child: Padding(
@@ -88,7 +111,7 @@ class _HomViewState extends State<HomeView> {
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         if (context.mounted) {
                           Navigator.of(context).pushNamedAndRemoveUntil(
-                              signInRoute, (route) => false);
+                              demoRoute, (route) => false);
                         }
                       });
                     },

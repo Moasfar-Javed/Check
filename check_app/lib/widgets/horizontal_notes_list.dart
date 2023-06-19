@@ -138,11 +138,14 @@ class _HorizontalNotesListState extends State<HorizontalNotesList> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _getRowWithIcons(note),
-                        Text(
-                          note.title,
-                          maxLines: 3,
-                          softWrap: true,
-                          overflow: TextOverflow.ellipsis,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Text(
+                            note.title,
+                            maxLines: 3,
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ],
                     ),

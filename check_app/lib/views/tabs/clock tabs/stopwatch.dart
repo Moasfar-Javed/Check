@@ -13,7 +13,7 @@ class _StopwatchTabState extends State<StopwatchTab>
     with SingleTickerProviderStateMixin {
   final StopWatchTimer _stopWatchTimer =
       StopWatchTimer(mode: StopWatchMode.countUp);
-  
+
   late AnimationController _animationController;
   bool isStarted = false;
 
@@ -33,116 +33,127 @@ class _StopwatchTabState extends State<StopwatchTab>
     super.dispose();
   }
 
-  @override
+    @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          height: 200,
-          width: 200,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(
-              width: 4,
-              style: BorderStyle.solid,
-              color: isStarted
-                  ? Palette.primaryColorVariant
-                  : Palette.textColorDarker,
+    return SingleChildScrollView(
+      // Wrap with SingleChildScrollView
+      child: Column(
+        children: [
+          Container(
+            height: 200,
+            width: 200,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                width: 4,
+                style: BorderStyle.solid,
+                color: isStarted
+                    ? Palette.primaryColorVariant
+                    : Palette.textColorDarker,
+              ),
             ),
-          ),
-          child: Center(
-            child: StreamBuilder<int>(
-              stream: _stopWatchTimer.rawTime,
-              initialData: _stopWatchTimer.rawTime.value,
-              builder: (context, snapshot) {
-                final value = snapshot.data;
-                final displayTime = StopWatchTimer.getDisplayTime(
-                  value!,
-                  hours: false,
-                );
-                return Text(
-                  displayTime,
-                  style: const TextStyle(
-                      fontSize: 26, fontWeight: FontWeight.w800),
-                );
-              },
-            ),
-          ),
-        ),
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Container(
-                height: 44,
-                width: 70,
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(50)),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Palette.backgroundColorShade,
-                    shadowColor: Colors.transparent,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50)),
-                  ),
-                  onPressed: () {
-                    isStarted
-                        ? _stopWatchTimer.onAddLap()
-                        : _stopWatchTimer.onResetTimer();
-                  },
-                  child: Text(
-                    isStarted ? 'Lap' : 'Reset',
+            child: Center(
+              child: StreamBuilder<int>(
+                stream: _stopWatchTimer.rawTime,
+                initialData: _stopWatchTimer.rawTime.value,
+                builder: (context, snapshot) {
+                  final value = snapshot.data;
+                  final displayTime = StopWatchTimer.getDisplayTime(
+                    value!,
+                    hours: false,
+                  );
+                  return Text(
+                    displayTime,
                     style: const TextStyle(
-                      fontSize: 14,
+                      fontSize: 26,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    height: 44,
+                    width: 70,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Palette.backgroundColorShade,
+                        shadowColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                      ),
+                      onPressed: () {
+                        isStarted
+                            ? _stopWatchTimer.onAddLap()
+                            : _stopWatchTimer.onResetTimer();
+                      },
+                      child: Text(
+                        isStarted ? 'Lap' : 'Reset',
+                        style: const TextStyle(
+                          fontSize: 14,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              const SizedBox(
-                width: 100,
-              ),
-              Container(
-                height: 44,
-                width: 70,
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(50)),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        isStarted ? Palette.redTodo : Palette.success,
-                    shadowColor: Colors.transparent,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50)),
+                  const SizedBox(
+                    width: 100,
                   ),
-                  onPressed: () {
-                    isStarted
-                        ? _stopWatchTimer.onStopTimer()
-                        : _stopWatchTimer.onStartTimer();
-                    setState(() {
-                      isStarted = !isStarted;
-                    });
-                  },
-                  child: Text(
-                    isStarted ? 'Stop' : 'Start',
-                    style: const TextStyle(fontSize: 14),
-                  ),
-                ),
-              )
-            ]),
+                  Container(
+                    height: 44,
+                    width: 70,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            isStarted ? Palette.redTodo : Palette.success,
+                        shadowColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                      ),
+                      onPressed: () {
+                        isStarted
+                            ? _stopWatchTimer.onStopTimer()
+                            : _stopWatchTimer.onStartTimer();
+                        setState(() {
+                          isStarted = !isStarted;
+                        });
+                      },
+                      child: Text(
+                        isStarted ? 'Stop' : 'Start',
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
           ),
-        ),
-        StreamBuilder<List<StopWatchRecord>>(
-          stream: _stopWatchTimer.records,
-          initialData: _stopWatchTimer.records.value,
-          builder: (context, snapshot) {
-            final value = snapshot.data;
-            if (value!.isEmpty) {
-              return Container();
-            }
+          StreamBuilder<List<StopWatchRecord>>(
+            stream: _stopWatchTimer.records,
+            initialData: _stopWatchTimer.records.value,
+            builder: (context, snapshot) {
+              final value = snapshot.data;
+              if (value!.isEmpty) {
+                return Container();
+              }
 
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: ListView.separated(
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: ListView.separated(
                   shrinkWrap: true,
                   scrollDirection: Axis.vertical,
                   physics: const BouncingScrollPhysics(),
@@ -162,11 +173,13 @@ class _StopwatchTabState extends State<StopwatchTab>
                         textAlign: TextAlign.center,
                       ),
                     );
-                  }),
-            );
-          },
-        )
-      ],
+                  },
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }

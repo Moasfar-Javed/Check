@@ -19,7 +19,8 @@ class UserService {
       return false;
     } else {
       final user = await getUser(email: firebaseUser.email!);
-      AuthUser(username: user.username, email: user.email, notesPin: user.notesPin);
+      AuthUser(
+          username: user.username, email: user.email, notesPin: user.notesPin);
       return true;
     }
   }
@@ -30,7 +31,8 @@ class UserService {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       final user = await getUser(email: email);
-      AuthUser(username: user.username, email: user.email, notesPin: user.notesPin);
+      AuthUser(
+          username: user.username, email: user.email, notesPin: user.notesPin);
     } catch (e) {
       //TODO
     }
@@ -53,7 +55,7 @@ class UserService {
     required String password,
   }) async {
     const pin = "1234";
-   final Map<String, dynamic> requestBody = {
+    final Map<String, dynamic> requestBody = {
       "username": username,
       "email": email,
       "pin": pin
@@ -72,6 +74,31 @@ class UserService {
     }
   }
 
+  Future<void> puUser({
+    required String username,
+    required String pin,
+  }) async {
+    final Map<String, dynamic> requestBody = {
+      "username": username,
+      "pin": pin
+    };
+
+    try {
+      var response = await BaseClient().putUserApi(
+        '/users?email=${AuthUser.getCurrentUser().email}',
+        requestBody,
+      );
+      if (response == null) throw NoItemsException();
+    } catch (e) {
+      print('API request error: $e');
+    }
+  }
+
+
+  Future<void> changePassword() async {
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: AuthUser.getCurrentUser().email);
+  }
+
   Future<void> logOut() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -79,5 +106,4 @@ class UserService {
       AuthUser.signOut();
     }
   }
-
 }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:alarm/alarm.dart';
@@ -23,7 +24,7 @@ class _TimerTabState extends State<TimerTab>
   late AnimationController _animationController;
   bool isStarted = false;
 
-  Duration initialtimer = new Duration();
+  Duration initialtimer = Duration.zero;
 
   Future<void> scheduleOneTimeTimer(Duration scheduledTime) async {
     await AndroidAlarmManager.oneShot(
@@ -51,6 +52,15 @@ class _TimerTabState extends State<TimerTab>
     _animationController.dispose();
     _stopWatchTimer.dispose();
     super.dispose();
+  }
+
+  void changeStateAfterDelay(Duration delay) {
+    Timer(delay, () {
+      setState(() {
+        isStarted = !isStarted;
+      });
+      print('State changed!');
+    });
   }
 
   @override
@@ -121,30 +131,19 @@ class _TimerTabState extends State<TimerTab>
                     ),
                   ),
                   onPressed: () async {
-                    // _stopWatchTimer.setPresetTime(
-                    //     mSec: initialtimer.inMilliseconds);
-                    // //print(initialtimer.inMilliseconds);
-                    // if (isStarted) {
-                    //   _stopWatchTimer.onStopTimer();
-                    // } else {
-                    // final scheduledTime = DateTime.now()
-                    //     .add(initialtimer); // Calculate the scheduled time
-                    //  await scheduleOneTimeTimer(initialtimer);
-                    //   _stopWatchTimer.onResetTimer();
-                    //   _stopWatchTimer.onStartTimer();
-                    // }
-                    if (!isStarted) {
+                   if (isStarted == false) {
+                      await scheduleOneTimeTimer(initialtimer);
+                      changeStateAfterDelay(initialtimer);
                       _stopWatchTimer.setPresetTime(
                           mSec: initialtimer.inMilliseconds);
                       _stopWatchTimer.onStartTimer();
-                      await scheduleOneTimeTimer(initialtimer);
                     } else {
-                      _stopWatchTimer.onStopTimer();
-                      print(_stopWatchTimer.rawTime.value);
-                      _stopWatchTimer.onResetTimer();
-                      print(_stopWatchTimer.rawTime.value);
                       await AndroidAlarmManager.cancel(46);
                       await flutterLocalNotificationsPlugin.cancel(46);
+                      _stopWatchTimer.onStopTimer();
+                      _stopWatchTimer.onResetTimer();
+                      
+                      
                     }
                     setState(() {
                       isStarted = !isStarted;
@@ -172,7 +171,7 @@ void _showNotification() async {
       AndroidNotificationDetails(
     'check_application_0401',
     'CheckApp',
-    importance: Importance.high,
+    importance: Importance.max,
     priority: Priority.high,
     enableVibration: true,
     vibrationPattern: Int64List.fromList(

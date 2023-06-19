@@ -94,6 +94,21 @@ class _DemoPageViewState extends State<DemoPageView>
                   }
                 },
                 child: const Text('Get Started')),
+            const SizedBox(height: 25),
+            const Text('Already have an account?'),
+            const SizedBox(height: 10),
+            GestureDetector(
+              onTap: () {
+                if (context.mounted) {
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil(signInRoute, (route) => false);
+                }
+              },
+              child: const Text(
+                'Sign In instead',
+                style: TextStyle(decoration: TextDecoration.underline),
+              ),
+            ),
           ],
         ),
       ),
@@ -108,7 +123,6 @@ class _DemoPageViewState extends State<DemoPageView>
             children: [
               SizedBox(
                   height: 300,
-                  
                   child: Gif(
                     controller: ctrlr1,
                     //duration: const Duration(seconds: 4),
