@@ -98,7 +98,7 @@ class Dialogs {
                   Padding(
                     padding: const EdgeInsets.only(
                         left: 15.0, right: 15.0, top: 20, bottom: 30),
-                    child: Text(text),
+                    child: Text(text, textAlign: TextAlign.center),
                   ),
                   const SizedBox(
                     height: 40,
@@ -529,5 +529,54 @@ class Dialogs {
     }
   }
 
- 
+  void showTimedDialog(
+      {required BuildContext context,
+      required String title,
+      required String text}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          backgroundColor: Palette.backgroundColorShade.withOpacity(0.9),
+          title: Text(title, textAlign: TextAlign.center),
+          content: Text(text, textAlign: TextAlign.center),
+        );
+      },
+    ).then((value) {});
+
+    Future.delayed(const Duration(seconds: 2), () {
+      if (Navigator.of(context).canPop()) {
+        Navigator.of(context).pop();
+      }
+    });
+  }
+
+  static void showNotReachableDialog({required BuildContext context}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const AlertDialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          contentPadding: EdgeInsets.zero,
+          content: SizedBox(
+            width: 300,
+            child: IntrinsicHeight(
+              child: Column(
+                children: [
+                  Icon(Icons.signal_wifi_connected_no_internet_4_rounded,
+                      size: 30),
+                  Text(
+                      'The server is not reachable. Please check your internet connection or try again later',
+                      textAlign: TextAlign.center),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
 }

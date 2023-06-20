@@ -7,6 +7,10 @@ const String baseUrl = 'http://192.168.100.6:5000/api';
 class BaseClient {
   var client = http.Client();
 
+
+
+
+
   //user data
 
   Future<dynamic> getUserApi(String api) async {

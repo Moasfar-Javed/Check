@@ -210,7 +210,13 @@ class _TodoTabState extends State<TodoTab> {
                             builder: (context, snapshot) {
                               switch (snapshot.connectionState) {
                                 case ConnectionState.waiting:
-                                  return const CircularProgressIndicator();
+                                  return SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              1.3,
+                                      child: Center(
+                                        child: CircularProgressIndicator(),
+                                      ));
                                 case ConnectionState.active:
                                   var allTodos = snapshot.data as List<Todo>;
 
@@ -317,12 +323,23 @@ class _TodoTabState extends State<TodoTab> {
                                     );
                                   }
                                 default:
-                                  return const CircularProgressIndicator();
+                                  return SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              1.3,
+                                      child: Center(
+                                        child: CircularProgressIndicator(),
+                                      ));
                               }
                             },
                           );
                         default:
-                          return const CircularProgressIndicator();
+                          return SizedBox(
+                            height: MediaQuery.of(context).size.height / 1.3,
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
                       }
                     },
                   ),

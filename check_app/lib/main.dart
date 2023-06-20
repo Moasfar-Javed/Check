@@ -69,6 +69,7 @@ class _GuiderState extends State<Guider> {
 
   @override
   Widget build(BuildContext context) {
+    
     return FutureBuilder(
       future: UserService.initializeFirebase(),
       builder: (context, snapshot) {
@@ -92,12 +93,20 @@ class _GuiderState extends State<Guider> {
                     return const DemoPageView();
                   }
                 } else {
-                  return const CircularProgressIndicator();
+                  return SizedBox(
+                      height: MediaQuery.of(context).size.height / 1.3,
+                      child: const Center(
+                        child: CircularProgressIndicator(),
+                      ));
                 }
               },
             );
           default:
-            return const CircularProgressIndicator();
+            return SizedBox(
+                height: MediaQuery.of(context).size.height / 1.3,
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ));
         }
       },
     );

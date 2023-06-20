@@ -1,5 +1,7 @@
 import 'package:check_app/services/crud/user_service.dart';
+import 'package:check_app/services/defined_exceptions.dart';
 import 'package:check_app/widgets/dialogs.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gif/gif.dart';
 import '../utilities/routes.dart';
@@ -16,11 +18,14 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
   late final GifController ctrlr;
   late final TextEditingController _email;
   late final TextEditingController _password;
+  Dialogs _dialogs = Dialogs();
 
   late final FocusNode _focusNode1;
   late final FocusNode _focusNode2;
 
   bool _obscureText = true;
+  bool _emailValid = true;
+  bool _passwordValid = true;
 
   @override
   void initState() {
@@ -39,6 +44,22 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
     _focusNode1.dispose();
     _focusNode2.dispose();
     super.dispose();
+  }
+
+  void _validateFields() {
+    setState(() {
+      _emailValid = _email.text.isNotEmpty;
+      _passwordValid = _password.text.isNotEmpty;
+    });
+  }
+
+  bool validate() {
+    if (_email.text.isEmpty || _password.text.isEmpty) {
+      _dialogs.showTimedDialog(
+          context: context, title: 'Error', text: 'One or more fields empty');
+      return false;
+    }
+    return true;
   }
 
   @override
@@ -80,12 +101,10 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                         keyboardType: TextInputType.emailAddress,
                         autocorrect: false,
                         enableSuggestions: false,
-                        onSubmitted: (_) {
-                          _focusNode1.unfocus();
-                          FocusScope.of(context).requestFocus(_focusNode2);
-                        },
-                        decoration: const InputDecoration(
+                        onChanged: (_) => _validateFields(),
+                        decoration: InputDecoration(
                           hintText: 'Email',
+                          errorText: _emailValid ? null : 'Email is required',
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -95,6 +114,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                         obscureText: _obscureText,
                         autocorrect: false,
                         enableSuggestions: false,
+                        onChanged: (_) => _validateFields(),
                         decoration: InputDecoration(
                           hintText: 'Password',
                           suffixIcon: IconButton(
@@ -107,6 +127,8 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                               });
                             },
                           ),
+                          errorText:
+                              _passwordValid ? null : 'Password is required',
                         ),
                       ),
                     ],
@@ -116,17 +138,34 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
               const SizedBox(height: 40),
               GradientButton(
                 onPressed: () async {
-                  final email = _email.text;
-                  final password = _password.text;
+                  if (validate()) {
+                    final email = _email.text;
+                    final password = _password.text;
 
-                  Dialogs.showLoadingDialog(
-                      context: context, text: 'Signing you in');
-                  await UserService()
-                      .signInUser(email: email, password: password);
-
-                  if (context.mounted) {
-                    Navigator.of(context)
-                        .pushNamedAndRemoveUntil(homeRoute, (route) => false);
+                    try {
+                      await UserService()
+                          .signInUser(email: email, password: password);
+                      if (context.mounted) {
+                        Dialogs.showLoadingDialog(
+                            context: context, text: 'Signing you in');
+                      }
+                      if (context.mounted) {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            homeRoute, (route) => false);
+                      }
+                    } catch (e) {
+                      if (e is InvalidLoginException) {
+                        _dialogs.showTimedDialog(
+                            context: context,
+                            title: 'Invalid Credentials',
+                            text: 'Either email, password or both are incorrect');
+                      } else {
+                        _dialogs.showTimedDialog(
+                            context: context,
+                            title: 'Services Unavailable',
+                            text: 'Please try again later');
+                      }
+                    }
                   }
                 },
                 child: const Text('Sign In'),

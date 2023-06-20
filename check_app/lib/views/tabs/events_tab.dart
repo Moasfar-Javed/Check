@@ -103,7 +103,11 @@ class _EventsTabState extends State<EventsTab> {
                   builder: (context, snapshot) {
                     switch (snapshot.connectionState) {
                       case ConnectionState.waiting:
-                        return const CircularProgressIndicator();
+                        return SizedBox(
+                            height: MediaQuery.of(context).size.height / 1.9,
+                            child: const Center(
+                              child: CircularProgressIndicator(),
+                            ));
                       case ConnectionState.active:
                         var allEvents = snapshot.data as List<Event>;
 
@@ -149,12 +153,20 @@ class _EventsTabState extends State<EventsTab> {
                         );
 
                       default:
-                        return const CircularProgressIndicator();
+                        return SizedBox(
+                            height: MediaQuery.of(context).size.height / 1.3,
+                            child: const Center(
+                              child: CircularProgressIndicator(),
+                            ));
                     }
                   },
                 );
               default:
-                return const CircularProgressIndicator();
+                return SizedBox(
+                    height: MediaQuery.of(context).size.height / 1.3,
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ));
             }
           },
         ),

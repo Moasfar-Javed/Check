@@ -30,17 +30,19 @@ class UserService {
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
-      final user = await getUser(email: email);
-      AuthUser(
-          username: user.username, email: user.email, notesPin: user.notesPin);
-    } catch (e) {
-      //TODO
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'invalid-email' || e.code == 'wrong-password' || e.code == 'user-not-found') {
+        throw InvalidLoginException();
+      }
     }
+    final user = await getUser(email: email);
+    AuthUser(
+        username: user.username, email: user.email, notesPin: user.notesPin);
   }
 
   Future<AuthUser> getUser({required String email}) async {
     var response =
-        await BaseClient().getUserApi('/users?email=$email').catchError((e) {});
+        await BaseClient().getUserApi('/users?email=$email');
     if (response == null) throw ApiException;
     List<dynamic> jsonResponse = jsonDecode(response);
 
@@ -61,8 +63,18 @@ class UserService {
       "pin": pin
     };
 
+    try {
     await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password);
+        } on FirebaseAuthException catch (e) {
+      if (e.code == 'invalid-email' ) {
+        throw InvalidLoginException();
+      } else if (e.code == 'email-already-in-use') {
+        throw EmailAlreadyInUse();
+      } else if (e.code == 'weak-password') {
+        throw WeakPassword();
+      }
+    }
     try {
       var response = await BaseClient().postUserApi(
         '/users',
@@ -78,10 +90,7 @@ class UserService {
     required String username,
     required String pin,
   }) async {
-    final Map<String, dynamic> requestBody = {
-      "username": username,
-      "pin": pin
-    };
+    final Map<String, dynamic> requestBody = {"username": username, "pin": pin};
 
     try {
       var response = await BaseClient().putUserApi(
@@ -94,9 +103,9 @@ class UserService {
     }
   }
 
-
   Future<void> changePassword() async {
-    await FirebaseAuth.instance.sendPasswordResetEmail(email: AuthUser.getCurrentUser().email);
+    await FirebaseAuth.instance
+        .sendPasswordResetEmail(email: AuthUser.getCurrentUser().email);
   }
 
   Future<void> logOut() async {

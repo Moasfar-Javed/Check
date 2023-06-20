@@ -93,7 +93,12 @@ class _NotesTabState extends State<NotesTab> {
                         builder: (context, snapshot) {
                           switch (snapshot.connectionState) {
                             case ConnectionState.waiting:
-                              return const CircularProgressIndicator();
+                              return SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height / 1.3,
+                                  child: const Center(
+                                    child: CircularProgressIndicator(),
+                                  ));
                             case ConnectionState.active:
                               var allNotes = snapshot.data as List<Note>;
                               if (allNotes.isEmpty) {
@@ -148,12 +153,21 @@ class _NotesTabState extends State<NotesTab> {
                                 );
                               }
                             default:
-                              return const CircularProgressIndicator();
+                              return SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height / 1.3,
+                                  child: const Center(
+                                    child: CircularProgressIndicator(),
+                                  ));
                           }
                         },
                       );
                     default:
-                      return const CircularProgressIndicator();
+                      return SizedBox(
+                          height: MediaQuery.of(context).size.height / 1.3,
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          ));
                   }
                 },
               ),

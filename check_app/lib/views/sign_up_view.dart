@@ -1,4 +1,6 @@
 import 'package:check_app/services/crud/user_service.dart';
+import 'package:check_app/services/defined_exceptions.dart';
+import 'package:check_app/widgets/dialogs.dart';
 import 'package:flutter/material.dart';
 import '../utilities/routes.dart';
 import '../widgets/gradient_button.dart';
@@ -15,7 +17,7 @@ class _SignUpViewState extends State<SignUpView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
   late final TextEditingController _confirmPassword;
-
+  Dialogs _dialogs = Dialogs();
   @override
   void initState() {
     _username = TextEditingController();
@@ -32,6 +34,27 @@ class _SignUpViewState extends State<SignUpView> {
     _password.dispose();
     _confirmPassword.dispose();
     super.dispose();
+  }
+
+  bool validate() {
+    if (_email.text.isEmpty ||
+        _password.text.isEmpty ||
+        _confirmPassword.text.isEmpty ||
+        _username.text.isEmpty) {
+      _dialogs.showTimedDialog(
+          context: context,
+          title: 'Fields Empty',
+          text: 'One or more fields are left empty');
+      return false;
+    } else if (_password.text != _confirmPassword.text) {
+      _dialogs.showTimedDialog(
+          context: context,
+          title: 'Passwords Not Same',
+          text: 'The passwords do not match');
+      return false;
+    }
+
+    return true;
   }
 
   @override
@@ -62,7 +85,7 @@ class _SignUpViewState extends State<SignUpView> {
                       enableSuggestions: false,
                       decoration: const InputDecoration(
                         hintText: 'Username',
-                      ),  
+                      ),
                     ),
                     const SizedBox(height: 10),
                     TextField(
@@ -70,9 +93,8 @@ class _SignUpViewState extends State<SignUpView> {
                       keyboardType: TextInputType.emailAddress,
                       autocorrect: false,
                       enableSuggestions: false,
-                      decoration: const  InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Email',
-                        
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -93,7 +115,6 @@ class _SignUpViewState extends State<SignUpView> {
                       enableSuggestions: false,
                       decoration: const InputDecoration(
                         hintText: 'Confirm Password',
-                        
                       ),
                     ),
                   ],
@@ -101,26 +122,44 @@ class _SignUpViewState extends State<SignUpView> {
               ),
               const SizedBox(height: 100),
               GradientButton(
-                  onPressed: () async {
+                onPressed: () async {
+                  if (validate()) {
                     final username = _username.text;
                     final email = _email.text;
                     final password = _password.text;
+                    try {
+                      await UserService().addUser(
+                          username: username, email: email, password: password);
 
-                    await UserService().addUser(username: username, email: email, password: password);
-                  //   final user = User(
-                  //     username: username,
-                  //     email: email,
-                  //     password: password,
-                  //   );
-                  //   var response = await BaseClient()
-                  //       .postUserApi('/users', user)
-                  //       .catchError((e) {});
-                  //   if (response == null) return;
-                     print('user created');
-                  },
- 
-                  child: const Text('Sign Up'),
-                ),
+                      if (context.mounted) {
+                        _dialogs.showTimedDialog(
+                            context: context,
+                            title: 'Account Created',
+                            text:
+                                'Account successfully created you may proceed to signin');
+                      }
+                    } catch (e) {
+                      if (e is InvalidLoginException) {
+                        _dialogs.showTimedDialog(
+                            context: context,
+                            title: 'Invalid Email',
+                            text: 'Please enter a valid email');
+                      } else if (e is WeakPassword) {
+                        _dialogs.showTimedDialog(
+                            context: context,
+                            title: 'Weak Password',
+                            text: 'Please choose a stronger password');
+                      } else if (e is EmailAlreadyInUse) {
+                        _dialogs.showTimedDialog(
+                            context: context,
+                            title: 'Email Already in Use',
+                            text: 'This is email is already in use');
+                      }
+                    }
+                  }
+                },
+                child: const Text('Sign Up'),
+              ),
               const SizedBox(height: 25),
               const Text('Already have an account?'),
               const SizedBox(height: 10),
