@@ -28,17 +28,23 @@ class TodoService {
   // functionalities
 
   Future<void> cacheTodos() async {
+    print("from todos " + AuthUser.getCurrentUser().email);
     final allTodos = getTodos(email: AuthUser.getCurrentUser().email);
     _todoList = await allTodos;
+
     //_todoList.sort();
     _todoStreamController.sink.add(_todoList);
+
   }
 
   Future<List<Todo>> getTodos({required email}) async {
-    final response =
-        await BaseClient().getTodosApi('/todos?email=$email').catchError((e) {});
+    final response = await BaseClient()
+        .getTodosApi('/todos?email=$email')
+        .catchError((e) {});
+
     if (response == null) throw ApiException;
     final jsonResponse = jsonDecode(response);
+
     if (jsonResponse.isEmpty) throw NoItemsException;
 
     //deserializing json to List<Todo>
@@ -46,7 +52,6 @@ class TodoService {
     for (var todoJson in jsonResponse) {
       Todo todo = Todo.fromJson(todoJson);
       list.add(todo);
-      
     }
     return list;
   }

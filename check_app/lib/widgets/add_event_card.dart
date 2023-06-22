@@ -106,13 +106,13 @@ class _AddEventCardState extends State<AddEventCard> {
   // }
 
   void _addEvent() {
-    DateTime end = DateTime(
+    DateTime end = DateTime.utc(
         _dateValueEnd!.year,
         _dateValueEnd!.month,
         _dateValueEnd!.day,
         _timePickerValueEnd.hour,
         _timePickerValueEnd.minute);
-    DateTime start = DateTime(
+    DateTime start = DateTime.utc(
         _dateValueStart!.year,
         _dateValueStart!.month,
         _dateValueStart!.day,
@@ -120,8 +120,13 @@ class _AddEventCardState extends State<AddEventCard> {
         _timePickerValueStart.minute);
     bool isAllDay = selectedTagEventType == 'All Day' ? true : false;
     //print(
-      //  '$start\n$end\n${_todo.text}\n${isAllDay}\n${selectedTag!.toLowerCase()}');
-    _eventService.addEvent(startTime: start, endTime: end, subject: _todo.text, color: selectedTag!.toLowerCase(), isAllDay: isAllDay);
+    //  '$start\n$end\n${_todo.text}\n${isAllDay}\n${selectedTag!.toLowerCase()}');
+    _eventService.addEvent(
+        startTime: start,
+        endTime: end,
+        subject: _todo.text,
+        color: selectedTag!.toLowerCase(),
+        isAllDay: isAllDay);
   }
 
   @override

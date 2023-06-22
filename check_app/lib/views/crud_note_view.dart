@@ -99,11 +99,15 @@ class _CrudNoteViewState extends State<CrudNoteView> {
     return DateFormat('dd/MM/yy hh:mm a').format(note!.accessedOn);
   }
 
+
   String getOrMakeTitle() {
     String title;
     if (_title.text.isEmpty) {
-      if (_text.text.length < 20) title = _text.text;
-      title = _text.text.substring(0, 20);
+      if (_text.text.length < 20) {
+        title = _text.text;
+      } else {
+        title = _text.text.substring(0, 20);
+      }
     } else {
       title = _title.text;
     }
@@ -118,7 +122,7 @@ class _CrudNoteViewState extends State<CrudNoteView> {
             note: _text.text,
             isHidden: isLock,
             isFavourite: isFav);
-      } else {
+      } if (note != null) {
         _noteService.updateNote(
             id: note!.id,
             title: getOrMakeTitle(),
@@ -165,7 +169,6 @@ class _CrudNoteViewState extends State<CrudNoteView> {
                   if (context.mounted) Navigator.of(context).pop();
                 }
               }
-              
             },
             icon: const Icon(
               Icons.delete,

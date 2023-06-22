@@ -91,9 +91,13 @@ class _AddTodoCardState extends State<AddTodoCard> {
   }
 
   void _addTodo() {
-    DateTime due = DateTime(_dateValue!.year, _dateValue!.month,
-        _dateValue!.day, _timePickerValue.hour, _timePickerValue.minute);
-
+    DateTime due = DateTime.utc(
+      _dateValue!.year,
+      _dateValue!.month,
+      _dateValue!.day,
+      _timePickerValue.hour,
+      _timePickerValue.minute,
+    );
     _todoService.addTodo(description: _todo.text, due: due, tag: selectedTag!);
     //print('${selectedTag} ${_todo.text} ${due} ${DateTime.now()}');
   }
@@ -158,7 +162,11 @@ class _AddTodoCardState extends State<AddTodoCard> {
                                   icon: const Icon(Icons.arrow_drop_down),
                                   isExpanded: true,
                                   underline: Container(),
-                                  hint: const Text('Tag', style: TextStyle(color: Palette.textColorVariant),),
+                                  hint: const Text(
+                                    'Tag',
+                                    style: TextStyle(
+                                        color: Palette.textColorVariant),
+                                  ),
                                   items: _tagsList
                                       .map((item) => DropdownMenuItem<String>(
                                           value: item, child: Text(item)))
@@ -210,8 +218,6 @@ class _AddTodoCardState extends State<AddTodoCard> {
                                 Navigator.of(context).push(
                                   showPicker(
                                     width: 350,
-                                    // minHour: TimeOfDay.now().hour.toDouble(),
-                                    // minMinute: TimeOfDay.now().minute.toDouble(),
                                     disableAutoFocusToNextInput: true,
                                     iosStylePicker:
                                         (Platform.isIOS || Platform.isAndroid)

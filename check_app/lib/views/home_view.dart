@@ -88,10 +88,6 @@ class _HomViewState extends State<HomeView> {
                       });
                     },
                   ),
-                  const PopupMenuItem<String>(
-                    value: 'About',
-                    child: Text('About'),
-                  ),
                   PopupMenuItem<String>(
                     value: 'Sign Out',
                     child: const Text(

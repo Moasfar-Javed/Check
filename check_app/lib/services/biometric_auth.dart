@@ -25,7 +25,7 @@ class BiometricAuth {
             stickyAuth: true,
             biometricOnly: true,
           ),
-          localizedReason: 'Use Face Id to authenticate',
+          localizedReason: 'Use biometrics to authenticate',
           authMessages: const [
             AndroidAuthMessages(
                 signInTitle: 'Unlock Note', cancelButton: 'Back'),

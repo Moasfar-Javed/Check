@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-const String baseUrl = 'http://192.168.100.6:5000/api';
+const String baseUrl = 'https://check-app-server.azurewebsites.net/api';
 
 class BaseClient {
   var client = http.Client();

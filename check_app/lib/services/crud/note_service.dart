@@ -65,7 +65,6 @@ class NoteService {
       "created_on": createdOn.toUtc().toString(),
       "accessed_on": accessedOn.toUtc().toString()
     };
-    print(requestBody.entries);
     var response = await BaseClient()
         .postNoteApi(
           '/notes?user=${AuthUser.getCurrentUser().email}',

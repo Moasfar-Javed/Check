@@ -15,7 +15,7 @@ class SharedPrefs {
   }
 
   
-  static Future<void> delFromPrefs({required String pin}) async {
+  static Future<void> delFromPrefs() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.remove(
         'check-app-note-key:${AuthUser.getCurrentUser().email}');

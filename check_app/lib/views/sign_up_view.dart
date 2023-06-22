@@ -1,6 +1,7 @@
 import 'package:check_app/services/crud/user_service.dart';
 import 'package:check_app/services/defined_exceptions.dart';
 import 'package:check_app/widgets/dialogs.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../utilities/routes.dart';
 import '../widgets/gradient_button.dart';
@@ -132,11 +133,9 @@ class _SignUpViewState extends State<SignUpView> {
                           username: username, email: email, password: password);
 
                       if (context.mounted) {
-                        _dialogs.showTimedDialog(
-                            context: context,
-                            title: 'Account Created',
-                            text:
-                                'Account successfully created you may proceed to signin');
+                        Navigator.of(context)
+                            .pushNamedAndRemoveUntil(
+                            verifyEmail, (route) => false);
                       }
                     } catch (e) {
                       if (e is InvalidLoginException) {

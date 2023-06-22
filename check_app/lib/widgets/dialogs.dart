@@ -304,7 +304,7 @@ class Dialogs {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(left: 200),
+                          padding: const EdgeInsets.only(left: 220),
                           child: IconButton(
                             onPressed: () async {
                               bool choice = await showConfirmationDialog(
@@ -360,7 +360,7 @@ class Dialogs {
                                             fontSize: 14),
                                       ),
                                       SizedBox(
-                                        width: 70,
+                                        width: 90,
                                       ),
                                       Text(
                                         'End Date',
@@ -376,7 +376,7 @@ class Dialogs {
                                         '${event.startTime.day}/${event.startTime.month}/${event.startTime.year}',
                                       ),
                                       const SizedBox(
-                                        width: 51,
+                                        width: 77,
                                       ),
                                       Text(
                                           '${event.endTime.day}/${event.endTime.month}/${event.endTime.year}'),
@@ -390,7 +390,7 @@ class Dialogs {
                                               color: Palette.textColorVariant,
                                               fontSize: 14)),
                                       SizedBox(
-                                        width: 70,
+                                        width: 90,
                                       ),
                                       Text(
                                         'End Time',
@@ -407,7 +407,7 @@ class Dialogs {
                                             .format(event.startTime),
                                       ),
                                       const SizedBox(
-                                        width: 61,
+                                        width: 88,
                                       ),
                                       Text(
                                         DateFormat('hh:mm a')
@@ -505,24 +505,17 @@ class Dialogs {
     );
   }
 
-  void showBioAuthDialog(
+  Future<bool?> showBioAuthDialog(
       {required BuildContext bcontext, required Note note}) async {
     final isAuthenticated = await BiometricAuth().authenticate();
-    print(isAuthenticated);
     if (isAuthenticated) {
       final notePin = await SharedPrefs.readFromPrefs();
-
       if (notePin != null) {
-        print(notePin);
         if (_noteService.unlockNote(notePin)) {
           if (bcontext.mounted) {
+             return true;
             Navigator.of(bcontext).pop();
-            Navigator.push(
-              bcontext,
-              MaterialPageRoute(
-                builder: (context) => CrudNoteView(note: note),
-              ),
-            );
+           
           }
         }
       }

@@ -1,5 +1,6 @@
 import 'package:check_app/services/biometric_auth.dart';
 import 'package:check_app/services/crud/note_service.dart';
+import 'package:check_app/services/shared_prefs.dart';
 import 'package:check_app/utilities/pallete.dart';
 import 'package:check_app/widgets/dialogs.dart';
 import 'package:check_app/widgets/gradient_button.dart';
@@ -112,11 +113,23 @@ class _HorizontalNotesListState extends State<HorizontalNotesList> {
                 ),
                 child: ListTile(
                   onTap: () async {
+                    final hasPrefs = await SharedPrefs.readFromPrefs();
                     if (note.isHidden) {
-                      if (await BiometricAuth().canAuthenticate()) {
+                      if (await BiometricAuth().canAuthenticate() &&
+                          hasPrefs != null) {
                         if (context.mounted) {
-                          _dialogs.showBioAuthDialog(
-                              bcontext: context, note: note);
+                          bool? isBioUnlocked = await _dialogs
+                              .showBioAuthDialog(bcontext: context, note: note);
+                              if (isBioUnlocked != null && isBioUnlocked == true){
+                                if (context.mounted) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CrudNoteView(note: note)),
+                              );
+                            }
+                              }
                         }
                       } else {
                         if (context.mounted) {
@@ -125,11 +138,13 @@ class _HorizontalNotesListState extends State<HorizontalNotesList> {
                         }
                       }
                     } else {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CrudNoteView(note: note)),
-                      );
+                      if (context.mounted) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CrudNoteView(note: note)),
+                        );
+                      }
                     }
                   },
                   title: Padding(

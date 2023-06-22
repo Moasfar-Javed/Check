@@ -28,6 +28,7 @@ class EventService {
   // functionalities
 
   Future<void> cacheEvents() async {
+    print(AuthUser.getCurrentUser().email);
     final allEvents = getEvents(email: AuthUser.getCurrentUser().email);
     _eventList = await allEvents;
     //_eventList.sort();

@@ -40,7 +40,9 @@ class _TimerTabState extends State<TimerTab>
   @override
   void initState() {
     super.initState();
-    _stopWatchTimer = StopWatchTimer(mode: StopWatchMode.countDown, presetMillisecond: initialtimer.inMilliseconds);
+    _stopWatchTimer = StopWatchTimer(
+        mode: StopWatchMode.countDown,
+        presetMillisecond: initialtimer.inMilliseconds);
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 1),
@@ -57,7 +59,9 @@ class _TimerTabState extends State<TimerTab>
   void changeStateAfterDelay(Duration delay) {
     Timer(delay, () {
       setState(() {
-        isStarted = !isStarted;
+        if (mounted) {
+          isStarted = !isStarted;
+        }
       });
       print('State changed!');
     });
@@ -131,7 +135,7 @@ class _TimerTabState extends State<TimerTab>
                     ),
                   ),
                   onPressed: () async {
-                   if (isStarted == false) {
+                    if (isStarted == false) {
                       await scheduleOneTimeTimer(initialtimer);
                       changeStateAfterDelay(initialtimer);
                       _stopWatchTimer.setPresetTime(
@@ -142,8 +146,6 @@ class _TimerTabState extends State<TimerTab>
                       await flutterLocalNotificationsPlugin.cancel(46);
                       _stopWatchTimer.onStopTimer();
                       _stopWatchTimer.onResetTimer();
-                      
-                      
                     }
                     setState(() {
                       isStarted = !isStarted;
@@ -168,20 +170,17 @@ void _showNotification() async {
   const String notificationTitle = 'Timer Expired';
   const String notificationBody = 'Your time is up';
   AndroidNotificationDetails androidPlatformChannelSpecifics =
-      AndroidNotificationDetails(
-    'check_application_0401',
-    'CheckApp',
-    importance: Importance.max,
-    priority: Priority.high,
-    enableVibration: true,
-    vibrationPattern: Int64List.fromList(
-        [0, 1000, 500, 1000, 500, 1000]), // Custom vibration pattern
-    sound: const RawResourceAndroidNotificationSound(
-        'alarm'), // Replace 'your_custom_sound' with your custom sound file name
-    playSound: true,
-    //sound: const UriAndroidNotificationSound("assets/sounds/alarm.mp3"),
-    icon: '@drawable/app_icon'
-  );
+      AndroidNotificationDetails('check_application_0401', 'CheckApp',
+          importance: Importance.max,
+          priority: Priority.high,
+          enableVibration: true,
+          vibrationPattern: Int64List.fromList(
+              [0, 1000, 500, 1000, 500, 1000]), // Custom vibration pattern
+          sound: const RawResourceAndroidNotificationSound(
+              'alarm'), // Replace 'your_custom_sound' with your custom sound file name
+          playSound: true,
+          //sound: const UriAndroidNotificationSound("assets/sounds/alarm.mp3"),
+          icon: '@drawable/app_icon');
   NotificationDetails platformChannelSpecifics =
       NotificationDetails(android: androidPlatformChannelSpecifics);
 

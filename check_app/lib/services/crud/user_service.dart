@@ -103,10 +103,19 @@ class UserService {
     }
   }
 
+   Future<void> deleteUser() async {
+    await FirebaseAuth.instance.currentUser!.delete();
+    final response =
+        await BaseClient().deleteTodoApi('/users?id=${AuthUser.getCurrentUser().email}').catchError((e) {});
+    if (response == null) throw ApiException;
+
+  }
+
   Future<void> changePassword() async {
     await FirebaseAuth.instance
         .sendPasswordResetEmail(email: AuthUser.getCurrentUser().email);
   }
+
 
   Future<void> logOut() async {
     final user = FirebaseAuth.instance.currentUser;
@@ -114,5 +123,9 @@ class UserService {
       await FirebaseAuth.instance.signOut();
       AuthUser.signOut();
     }
+  }
+
+  void sendEmailVerification() {
+    FirebaseAuth.instance.currentUser!.sendEmailVerification();
   }
 }

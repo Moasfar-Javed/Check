@@ -27,6 +27,7 @@ class _AccountViewState extends State<AccountView> {
   late TextEditingController _password;
   bool _obscureText = true;
   bool _fieldsChanged = false;
+  bool stateKeeper = true;
   @override
   void initState() {
     _username = TextEditingController();
@@ -74,6 +75,24 @@ class _AccountViewState extends State<AccountView> {
             ),
           ),
         ),
+        actions: [
+          IconButton(
+              onPressed: () async {
+                bool isSure = await Dialogs.showConfirmationDialog(
+                    context: context,
+                    type: 'delete',
+                    text: 'Are you sure you want to delete your account?',
+                    button: 'Delete');
+
+                if (isSure) {
+                  UserService().deleteUser();
+                }
+              },
+              icon: const Icon(
+                Icons.delete,
+                color: Palette.redTodo,
+              ))
+        ],
       ),
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -141,29 +160,71 @@ class _AccountViewState extends State<AccountView> {
               const SizedBox(height: 35),
               FutureBuilder(
                 future: BiometricAuth().canAuthenticate(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    if (snapshot.data as bool) {
-                      return Column(children: [
-                        const Text(
-                            'Your device supports biometric authentication',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Palette.textColorVariant,
-                              fontSize: 14,
-                            )),
-                        const SizedBox(height: 5),
-                        GradientButton(
-                          onPressed: () {
-                            showAuthDialogForAccounts(context: context);
-                          },
-                          child: const Text('Enable Biometrics'),
-                        ),
-                        const SizedBox(height: 15),
-                      ]);
-                    } else {
-                      return Container();
-                    }
+                builder: (context, snapshot1) {
+                  if (snapshot1.connectionState == ConnectionState.done) {
+                    return FutureBuilder(
+                        future: SharedPrefs.readFromPrefs(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            final isThere = snapshot.data as String?;
+
+                            if (isThere == null) {
+                              if (snapshot1.data as bool) {
+                                return Column(children: [
+                                  const Text(
+                                      'Your device supports biometric authentication',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Palette.textColorVariant,
+                                        fontSize: 14,
+                                      )),
+                                  const SizedBox(height: 5),
+                                  GradientButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        stateKeeper = !stateKeeper;
+                                      });
+                                      showAuthDialogForAccounts(
+                                          context: context);
+                                    },
+                                    child: const Text('Enable Biometrics'),
+                                  ),
+                                  const SizedBox(height: 15),
+                                ]);
+                              } else {
+                                return Container();
+                              }
+                            } else {
+                              if (snapshot1.data as bool) {
+                                return Column(children: [
+                                  const Text(
+                                      'Use PIN for unlocking notes instead?',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Palette.textColorVariant,
+                                        fontSize: 14,
+                                      )),
+                                  const SizedBox(height: 5),
+                                  GradientButton(
+                                    onPressed: () async {
+                                      await SharedPrefs.delFromPrefs();
+                                      setState(() {
+                                        stateKeeper = !stateKeeper;
+                                      });
+                                    },
+                                    child: const Text('Disable Biometrics'),
+                                  ),
+                                  const SizedBox(height: 15),
+                                ]);
+                              } else {
+                                return Container();
+                              }
+                            }
+                          } else {
+                            return const CircularProgressIndicator();
+                          }
+                        });
                   } else {
                     return const CircularProgressIndicator();
                   }
@@ -200,7 +261,8 @@ class _AccountViewState extends State<AccountView> {
                             ),
                           ),
                           onPressed: () async {
-                            await UserService().puUser(username: _username.text, pin: _notesPin.text);
+                            await UserService().puUser(
+                                username: _username.text, pin: _notesPin.text);
                             await UserService().logOut();
                             WidgetsBinding.instance.addPostFrameCallback((_) {
                               if (context.mounted) {

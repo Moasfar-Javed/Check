@@ -36,7 +36,7 @@ class _TodoTabState extends State<TodoTab> {
         //color: Palette.appColorPalette[800]!,
         size: 16,
       );
-    } else if (due.isBefore(DateTime.now())) {
+    } else if (due.isBefore(DateTime.now().toUtc())) {
       return const Icon(
         Icons.alarm_outlined,
         //color: Palette.appColorPalette[800]!,
@@ -74,7 +74,7 @@ class _TodoTabState extends State<TodoTab> {
   Color _getColor(String tag, String status, DateTime due) {
     if (status == "done") {
       return Palette.backgroundColorShade;
-    } else if (due.isBefore(DateTime.now())) {
+    } else if (due.isBefore(DateTime.now().toUtc())) {
       return Palette.redTodo;
     }
     switch (tag) {
@@ -91,6 +91,7 @@ class _TodoTabState extends State<TodoTab> {
 
   List<Todo> _createTodoList(List<Todo> todosList) {
     List<Todo> todos;
+    if (todosList.isEmpty) return todosList;
     switch (dropdownValue) {
       case 'Today':
         {
@@ -208,13 +209,15 @@ class _TodoTabState extends State<TodoTab> {
                           return StreamBuilder<List<Todo>>(
                             stream: _todoService.allTodos,
                             builder: (context, snapshot) {
+                              print('builder exec');
+
                               switch (snapshot.connectionState) {
                                 case ConnectionState.waiting:
                                   return SizedBox(
                                       height:
                                           MediaQuery.of(context).size.height /
                                               1.3,
-                                      child: Center(
+                                      child: const Center(
                                         child: CircularProgressIndicator(),
                                       ));
                                 case ConnectionState.active:
@@ -327,7 +330,7 @@ class _TodoTabState extends State<TodoTab> {
                                       height:
                                           MediaQuery.of(context).size.height /
                                               1.3,
-                                      child: Center(
+                                      child: const Center(
                                         child: CircularProgressIndicator(),
                                       ));
                               }
@@ -336,7 +339,7 @@ class _TodoTabState extends State<TodoTab> {
                         default:
                           return SizedBox(
                             height: MediaQuery.of(context).size.height / 1.3,
-                            child: Center(
+                            child: const Center(
                               child: CircularProgressIndicator(),
                             ),
                           );
