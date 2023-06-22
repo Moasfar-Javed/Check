@@ -4,7 +4,7 @@
 
 ### Demo
 
-Coming as soon as the app development concludes
+[Walk through of the Check App](https://drive.google.com/file/d/1LKBivD22PS3fzDrmagbwuj_st0GpFUIM/view?usp=sharing)
 
 ---
 
